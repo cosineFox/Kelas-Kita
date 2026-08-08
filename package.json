@@ -1,0 +1,33 @@
+{
+  "name": "kelaskita",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "db:migrate": "node database/migrate.mjs",
+    "infra:cloudflare": "node scripts/provision-cloudflare.mjs",
+    "infra:dns": "node scripts/set-cloudflare-dns.mjs",
+    "preview": "vite preview",
+    "test": "node --test src/lib/*.test.js api/_lib/*.test.js database/*.test.js",
+    "verify:production": "node scripts/check-production.mjs"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "ai": "^7.0.55",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.170.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.3.16",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.5"
+  }
+}
