@@ -51,7 +51,7 @@ Create a scoped Cloudflare API token with `Turnstile Sites Write`, `Zone WAF Wri
 npm run infra:cloudflare
 ```
 
-For a new widget, this writes `.cloudflare-provisioning.json` with mode `0600`; the file is git-ignored. Copy its site key to `VITE_TURNSTILE_SITE_KEY`, its secret to `TURNSTILE_SECRET_KEY`, and the final host to `TURNSTILE_HOSTNAMES` in Vercel. Delete the local credentials file after the Vercel variables are confirmed.
+For a new widget, this writes `.cloudflare-provisioning.json` with mode `0600`; the file is git-ignored. Copy its site key to `VITE_TURNSTILE_SITE_KEY`, its secret to `TURNSTILE_SECRET`, and the final host to `TURNSTILE_HOSTNAMES` in Vercel. Delete the local credentials file after the Vercel variables are confirmed.
 
 The script also creates one Cloudflare rate rule for bursts above 20 API writes in 10 seconds per edge location and source IP. A request-header transform overwrites `X-KelasKita-Edge-Key` before `/api/` reaches Vercel; production writes reject requests without the matching server secret. This prevents direct-origin requests from bypassing the Cloudflare layer. Postgres independently enforces the lower product limits, so delayed or approximate edge counters cannot publish extra records.
 

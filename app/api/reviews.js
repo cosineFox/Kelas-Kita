@@ -20,7 +20,7 @@ export default endpoint(["POST"], async (request, response) => {
   assertSubmissionsOpen();
   assertSameOrigin(request);
   const input = reviewInput.parse(readJson(request));
-  await verifyTurnstile(request, input.turnstileToken, "review_submit");
+  await verifyTurnstile(request, input.turnstileToken);
   await enforceRateLimit(request, "review", 3, 10 * 60 * 1_000);
   const created = await createReview(request, input);
   const processed = await processTarget("review", created.review.id);

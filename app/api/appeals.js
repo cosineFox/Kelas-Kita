@@ -11,7 +11,7 @@ export default endpoint(["POST"], async (request, response) => {
   assertCaseRoutesOpen();
   assertSameOrigin(request);
   const input = appealInput.parse(readJson(request));
-  await verifyTurnstile(request, input.turnstileToken, "appeal_submit");
+  await verifyTurnstile(request, input.turnstileToken);
   await enforceRateLimit(request, "appeal", 3, 60 * 60 * 1_000);
   const appeal = await createAppeal(request, input);
   const processed = await processTarget("appeal", appeal.id);

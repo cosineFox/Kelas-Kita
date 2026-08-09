@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
 
 const testSiteKey = "1x00000000000000000000AA";
-const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || (import.meta.env.DEV ? testSiteKey : "");
+const productionSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || "0x4AAAAAAELXATJtcIQpePzc";
+const siteKey = import.meta.env.DEV ? testSiteKey : productionSiteKey;
+const action = "turnstile-spin-v2";
 let scriptPromise;
 
 const loadScript = () => {
@@ -24,7 +26,7 @@ const loadScript = () => {
   return scriptPromise;
 };
 
-export default function Turnstile({ action, onToken, resetKey = 0 }) {
+export default function Turnstile({ onToken, resetKey = 0 }) {
   const container = useRef(null);
 
   useEffect(() => {
@@ -49,8 +51,7 @@ export default function Turnstile({ action, onToken, resetKey = 0 }) {
       active = false;
       if (widget !== undefined && window.turnstile) window.turnstile.remove(widget);
     };
-  }, [action, onToken, resetKey]);
+  }, [onToken, resetKey]);
 
-  if (!siteKey) return <p className="turnstile-error">Anti-bot protection is not configured.</p>;
-  return <div className="turnstile-slot"><div ref={container} /><small>Protected by Cloudflare Turnstile</small></div>;
+  return <div className="turnstile-slot"><div ref={container} className="cf-turnstile" data-sitekey={siteKey} data-action={action} /><small>Protected by Cloudflare Turnstile</small></div>;
 }

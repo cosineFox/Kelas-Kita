@@ -11,7 +11,7 @@ export default endpoint(["POST"], async (request, response) => {
   assertCaseRoutesOpen();
   assertSameOrigin(request);
   const input = replyInput.parse(readJson(request));
-  await verifyTurnstile(request, input.turnstileToken, "reply_submit");
+  await verifyTurnstile(request, input.turnstileToken);
   await enforceRateLimit(request, "reply", 2, 60 * 60 * 1_000);
   const reply = await createReply(request, input);
   const processed = await processTarget("reply", reply.id);

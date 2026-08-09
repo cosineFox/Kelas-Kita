@@ -3,8 +3,9 @@ import { isProduction, requireEnv } from "./config.js";
 import { requestIp } from "./identity.js";
 
 const endpoint = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+const action = "turnstile-spin-v2";
 
-export const verifyTurnstile = async (request, token, expectedAction) => {
+export const verifyTurnstile = async (request, token) => {
   if (!token || token.length > 2_048) {
     throw new HttpError(400, "turnstile_required", "Complete the anti-bot check before submitting.");
   }
@@ -16,22 +17,23 @@ export const verifyTurnstile = async (request, token, expectedAction) => {
   try {
     const response = await fetch(endpoint, {
       method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        secret: requireEnv("TURNSTILE_SECRET_KEY"),
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        secret: requireEnv("TURNSTILE_SECRET"),
         response: token,
         remoteip: requestIp(request),
       }),
       signal: controller.signal,
     });
+    if (!response.ok) throw new Error(`siteverify ${response.status}`);
     result = await response.json();
   } catch {
-    throw new HttpError(503, "turnstile_unavailable", "The anti-bot check is temporarily unavailable.");
+    throw new HttpError(403, "turnstile_failed", "The anti-bot check could not be verified.");
   } finally {
     clearTimeout(timeout);
   }
 
-  if (!result.success || result.action !== expectedAction) {
+  if (result.success !== true || result.action !== action) {
     throw new HttpError(403, "turnstile_failed", "The anti-bot check could not be verified.");
   }
 

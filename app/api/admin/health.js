@@ -34,7 +34,7 @@ export default endpoint(["GET"], async (request, response) => {
       operatorContact: present("OPERATOR_CONTACT_EMAIL"),
       publicOrigin: present("PUBLIC_ORIGIN"),
       submissionsOpen: process.env.SUBMISSIONS_OPEN === "true",
-      turnstile: present("TURNSTILE_SECRET_KEY") && present("TURNSTILE_HOSTNAMES"),
+      turnstile: present("TURNSTILE_SECRET") && present("TURNSTILE_HOSTNAMES"),
       urgentPrimary: present("URGENT_REMOVAL_PRIMARY"),
       urgentBackup: present("URGENT_REMOVAL_BACKUP"),
       urgentRota: validDate("URGENT_ROTA_TESTED_AT"),

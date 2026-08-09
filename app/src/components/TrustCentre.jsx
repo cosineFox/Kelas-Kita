@@ -211,7 +211,7 @@ function CaseForm({ mode, context, courses, lecturers, reviews, onNavigate, onRe
           {mode === "appeal" && <label>Contact email <span>optional and private</span><input type="email" value={contact} onChange={(event) => setContact(event.target.value)} placeholder="Only for follow-up on this appeal" /></label>}
           <label>{mode === "reply" ? "Proposed reply" : mode === "appeal" ? "Why should the decision change?" : "What should the Core consider?"}<textarea required minLength={mode === "report" ? 20 : 70} maxLength={1500} value={mode === "reply" ? body : details} onChange={(event) => mode === "reply" ? setBody(event.target.value) : setDetails(event.target.value)} /></label>
           {mode === "report" && <div className="urgent-note"><ShieldAlert /><span>Strong threat or personal-information signals can temporarily hide a review immediately. Other reports do not automatically remove criticism.</span></div>}
-          <Turnstile action={`${mode}_submit`} onToken={setTurnstileToken} resetKey={turnstileReset} />
+          <Turnstile onToken={setTurnstileToken} resetKey={turnstileReset} />
           {error && <p className="publish-error"><AlertTriangle />{error}</p>}
           <button className="button primary" disabled={submitting || !turnstileToken || (mode !== "appeal" && !reviewId) || (mode === "appeal" && !linkedReportAppeal && !receipt)}>{submitting ? "Evaluating…" : !turnstileToken ? "Complete anti-bot check" : mode === "report" ? "Send to the Core" : mode === "appeal" ? "Submit appeal" : "Submit reply"}<ArrowRight /></button>
         </form>

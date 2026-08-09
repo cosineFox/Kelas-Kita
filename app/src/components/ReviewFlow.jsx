@@ -327,7 +327,7 @@ export default function ReviewFlow({
               <div className="trust-queue"><ShieldCheck /><div><strong>Screened, logged and appealable</strong><p>Strong criticism stays allowed. The agents classify risk; the Core never declares an allegation true, defamatory or proof of guilt.</p></div></div>
               {analysis.requiresHold && <div className="formal-report-warning"><AlertTriangle /><div><strong>This review will be held.</strong><p>KelasKita cannot investigate serious misconduct. Please also use your university’s integrity, student-support or security reporting channel.</p></div></div>}
               {analysis.blockers.length > 0 && <div className="formal-report-warning"><AlertTriangle /><div><strong>This text is likely to be withheld.</strong><p>Remove threats, personal information, links and direct insults if you want the teaching feedback considered for publication.</p></div></div>}
-              <Turnstile action="review_submit" onToken={setTurnstileToken} resetKey={turnstileReset} />
+              <Turnstile onToken={setTurnstileToken} resetKey={turnstileReset} />
               {publishError && <p className="publish-error"><AlertTriangle />{publishError}</p>}
             </div>
           )}
