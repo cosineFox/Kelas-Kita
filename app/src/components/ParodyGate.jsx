@@ -25,8 +25,7 @@ export default function ParodyGate({ open, onClose }) {
     if (leaving) return;
     rememberGate();
     setLeaving(true);
-    window.setTimeout(onClose, 380);
-  }, [leaving, onClose]);
+  }, [leaving]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -38,7 +37,15 @@ export default function ParodyGate({ open, onClose }) {
   if (!open) return null;
 
   return (
-    <section className={`parody-gate ${leaving ? "is-leaving" : ""}`} role="dialog" aria-modal="true" aria-labelledby="parody-gate-title">
+    <section
+      className={`parody-gate ${leaving ? "is-leaving" : ""}`}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="parody-gate-title"
+      onTransitionEnd={(event) => {
+        if (leaving && event.target === event.currentTarget && event.propertyName === "transform") onClose();
+      }}
+    >
       <div className="gate-grid" aria-hidden="true" />
       <header className="gate-header">
         <span>DEFINITELY NOT ANUBIS™</span>

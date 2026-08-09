@@ -118,11 +118,12 @@ export default function App() {
     catch (error) { return { ok: false, error: message(error) }; }
   };
 
-  const overlayOpen = gateOpen || reviewOpen || Boolean(trustContext);
+  const contentOverlayOpen = reviewOpen || Boolean(trustContext);
+  const interactionBlocked = gateOpen || contentOverlayOpen;
   return (
     <>
       <ParodyGate open={gateOpen} onClose={() => setGateOpen(false)} />
-      <div className={overlayOpen ? "app-underlay is-dimmed" : "app-underlay"} aria-hidden={overlayOpen || undefined} inert={overlayOpen ? "" : undefined}>
+      <div className={contentOverlayOpen ? "app-underlay is-dimmed" : "app-underlay"} aria-hidden={interactionBlocked || undefined} inert={interactionBlocked ? "" : undefined}>
         <Discovery
           {...data}
           loading={loading}
