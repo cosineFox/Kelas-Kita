@@ -83,7 +83,7 @@ test("commits catalogue, pending review, queue and publication on the server", a
       reasonCodes: ["screened_low_risk"],
       version: "core-0.1",
     },
-    model: "alibaba/qwen3.7-flash",
+    model: "thinkingmachines/inkling-small",
     agents: [],
   };
   await saveAutomatedDecision("review", created.review.id, result);
@@ -113,7 +113,7 @@ test("commits catalogue, pending review, queue and publication on the server", a
       reasonCodes: ["personal_information"],
       version: "core-0.1",
     },
-    model: "alibaba/qwen3.7-flash",
+    model: "thinkingmachines/inkling-small",
     agents: [],
   });
   await finishJob(reportJob, true);

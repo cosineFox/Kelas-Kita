@@ -14,7 +14,7 @@ Status: **not signed**. Keep public submissions closed until real people complet
 ## Live response
 
 1. Open `/moderation`, confirm the case ID and urgent age, and take ownership through the agreed operator channel.
-2. Check the content, report context, Qwen categories and deterministic Core action. Treat model prose as a signal, not evidence.
+2. Check the content, report context, model categories and deterministic Core action. Treat model prose as a signal, not evidence.
 3. For an exposed phone number, address, identity number or credible targeted threat, select **Hold** or **Remove** and write a specific private policy reason.
 4. Preserve only the minimum record needed for appeal and incident handling. Do not copy the content into chat, tickets or personal notes.
 5. Notify the backup if the primary cannot finish within 15 minutes.

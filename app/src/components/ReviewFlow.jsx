@@ -300,7 +300,7 @@ export default function ReviewFlow({
               </div>
               <aside className="live-check">
                 <h3><ShieldCheck /> Live safety check</h3>
-                <p>Quick checks run here. The Qwen agent council runs after submission.</p>
+                <p>Quick checks run here. The moderation council runs after submission.</p>
                 {[
                   ["Threats", ["threat"]],
                   ["Personal attacks", ["attack"]],

@@ -52,7 +52,7 @@ function Experiment() {
       <h3>How decisions work</h3>
       <ol className="policy-steps">
         <li><span>01</span><p>Every submission is stored as pending. Pending and held ratings do not affect public scores.</p></li>
-        <li><span>02</span><p>Four specialist roles run in one Qwen moderation pass to keep cost and data sharing contained.</p></li>
+        <li><span>02</span><p>Four specialist roles run in one moderation pass to keep cost and data sharing contained.</p></li>
         <li><span>03</span><p>Fixed rules—not free-form model prose—choose the initial action. Urgent privacy and safety risks can be hidden automatically.</p></li>
         <li><span>04</span><p>Every action receives reason codes, a private audit record, an appeal route and a human override.</p></li>
       </ol>
@@ -81,7 +81,7 @@ function Privacy() {
       <h2>Privacy & retention</h2>
       <p className="trust-lead">No account is required and reviewers are not publicly identified. That is not a promise of absolute anonymity.</p>
       <dl className="policy-list">
-        <div><dt>Moderation processing</dt><dd>Review and moderation-case text is sent through Vercel AI Gateway to the configured Qwen model for risk classification. Contact details entered for appeals or replies are not included in that model request.</dd></div>
+        <div><dt>Moderation processing</dt><dd>Review and moderation-case text is sent through Vercel AI Gateway to the configured model for risk classification. Contact details entered for appeals or replies are not included in that model request.</dd></div>
         <div><dt>Infrastructure records</dt><dd>Cloudflare and Vercel may process network and security logs. KelasKita’s application database should retain only rotating abuse-signal hashes, not raw IP addresses.</dd></div>
         <div><dt>30 days</dt><dd>Rotating abuse hashes and short-lived anti-spam signals.</dd></div>
         <div><dt>90 days</dt><dd>Rejected or withdrawn review text, allowing time for an appeal.</dd></div>

@@ -79,7 +79,7 @@ Redeploy once the Turnstile public key is present, then run:
 PUBLIC_ORIGIN="https://$PUBLIC_HOSTNAME" ADMIN_SECRET='the-local-copy' npm run verify:production
 ```
 
-This checks the public state boundary, operator session, database, complete configuration and a real `alibaba/qwen3.7-flash` AI Gateway request. It fails closed if the credential or model is unavailable.
+This checks the public state boundary, operator session, database, complete configuration and a real `thinkingmachines/inkling-small` AI Gateway request. It fails closed if the credential or model is unavailable.
 
 Then use a real browser to complete one staging submission and report. Confirm:
 

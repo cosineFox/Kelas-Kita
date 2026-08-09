@@ -3,7 +3,7 @@ import { z } from "zod";
 import { analyseFeedback } from "../../src/lib/moderation.js";
 import { decideModeration } from "../../src/lib/moderationCore.js";
 
-export const moderationModel = process.env.MODERATION_MODEL ?? "alibaba/qwen3.7-flash";
+export const moderationModel = process.env.MODERATION_MODEL ?? "thinkingmachines/inkling-small";
 
 const agentSchema = z.object({
   agent: z.enum(["allegation", "integrity", "privacy", "safety"]),
@@ -69,5 +69,5 @@ export const publicDecision = ({ decision, model }) => ({
   status: decision.status,
   summary: decision.summary,
   version: decision.version,
-  model: model ? "Qwen via Vercel AI Gateway" : null,
+  model: model ? "Vercel AI Gateway classifier" : null,
 });
