@@ -5,12 +5,12 @@ import { verifyTurnstile } from "./turnstile.js";
 
 test("verifies Turnstile through the canonical server endpoint", async () => {
   const previousFetch = global.fetch;
-  const previousSecret = process.env.TURNSTILE_SECRET;
+  const previousSecret = process.env.TURNSTILE_SECRET_KEY;
   const previousEnvironment = process.env.VERCEL_ENV;
   const secret = randomUUID();
   let request;
 
-  process.env.TURNSTILE_SECRET = secret;
+  process.env.TURNSTILE_SECRET_KEY = secret;
   process.env.VERCEL_ENV = "preview";
   global.fetch = async (url, options) => {
     request = { url, options };
@@ -39,8 +39,8 @@ test("verifies Turnstile through the canonical server endpoint", async () => {
     );
   } finally {
     global.fetch = previousFetch;
-    if (previousSecret === undefined) delete process.env.TURNSTILE_SECRET;
-    else process.env.TURNSTILE_SECRET = previousSecret;
+    if (previousSecret === undefined) delete process.env.TURNSTILE_SECRET_KEY;
+    else process.env.TURNSTILE_SECRET_KEY = previousSecret;
     if (previousEnvironment === undefined) delete process.env.VERCEL_ENV;
     else process.env.VERCEL_ENV = previousEnvironment;
   }

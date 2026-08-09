@@ -19,7 +19,7 @@ export const verifyTurnstile = async (request, token) => {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        secret: requireEnv("TURNSTILE_SECRET"),
+        secret: requireEnv("TURNSTILE_SECRET_KEY"),
         response: token,
         remoteip: requestIp(request),
       }),
