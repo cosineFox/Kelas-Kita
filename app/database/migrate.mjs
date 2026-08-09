@@ -2,8 +2,8 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import postgres from "postgres";
 
-const connectionString = process.env.MIGRATION_DATABASE_URL ?? process.env.DATABASE_URL;
-if (!connectionString) throw new Error("MIGRATION_DATABASE_URL or DATABASE_URL is required");
+const connectionString = process.env.POSTGRES_URL_NON_POOLING;
+if (!connectionString) throw new Error("POSTGRES_URL_NON_POOLING is required");
 
 const migrationId = "001_initial";
 const source = await readFile(new URL("./schema.sql", import.meta.url), "utf8");

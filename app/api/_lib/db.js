@@ -11,7 +11,7 @@ const transactionMode = ({ isolationLevel, readOnly } = {}) => {
 };
 
 const connect = () => {
-  const client = postgres(requireEnv("DATABASE_URL"), {
+  const client = postgres(requireEnv("POSTGRES_URL"), {
     max: 1,
     prepare: false,
     idle_timeout: 20,

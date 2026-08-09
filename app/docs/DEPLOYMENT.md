@@ -9,9 +9,9 @@ vercel login
 vercel link
 ```
 
-Create a Supabase project in the region appropriate for the service's legal and latency requirements. In **Connect → Transaction pooler**, copy the port `6543` connection string into Vercel as `DATABASE_URL`. Transaction mode is intended for serverless traffic and the application disables prepared statements accordingly.
+Create a Supabase project in the region appropriate for the service's legal and latency requirements, then connect it through Vercel's Supabase integration. KelasKita uses the integration-managed `POSTGRES_URL` for its serverless connection pool and `POSTGRES_URL_NON_POOLING` for migrations; do not create duplicate database variables.
 
-Do not add `SUPABASE_URL`, an anon key or a service-role key. KelasKita does not use Supabase Auth or the browser Data API; all database access stays inside Vercel Functions. The migration enables RLS without public policies as defence in depth.
+The Supabase API variables are not used by KelasKita. Database access stays inside Vercel Functions, and the migration enables RLS without public policies as defence in depth.
 
 ## 2. Create production secrets
 
@@ -26,7 +26,7 @@ openssl rand -hex 32       # CRON_SECRET
 openssl rand -hex 32       # EDGE_PROXY_SECRET
 ```
 
-Add every server-only runtime field in [`.env.example`](../.env.example) to Production and Preview in Vercel, except `MIGRATION_DATABASE_URL` and the infrastructure-only Cloudflare fields. Add `VITE_TURNSTILE_SITE_KEY` only after step 4. `PUBLIC_ORIGIN` must be the final `https://subdomain.example.com` origin, with no trailing slash. `TURNSTILE_HOSTNAMES` is a comma-separated hostname list without schemes.
+Add every server-only runtime field in [`.env.example`](../.env.example) to Production and Preview in Vercel, except the infrastructure-only Cloudflare fields. Add `VITE_TURNSTILE_SITE_KEY` only after step 4. `PUBLIC_ORIGIN` must be the final `https://subdomain.example.com` origin, with no trailing slash. `TURNSTILE_HOSTNAMES` is a comma-separated hostname list without schemes.
 
 Set `OPERATOR_CONTACT_EMAIL`, `URGENT_REMOVAL_PRIMARY` and `URGENT_REMOVAL_BACKUP` to real, monitored values. They are health gates, not decorative metadata. Keep `SUBMISSIONS_OPEN=false` until the final step.
 
@@ -34,9 +34,12 @@ Vercel supplies an OIDC token to AI Gateway in a linked deployment. `AI_GATEWAY_
 
 ## 3. Apply the database migration
 
-Use Supabase's Direct connection string for this one-off administrative task. If the local network cannot reach the IPv6 direct endpoint, use the port `5432` Session pooler connection instead. Put it in the git-ignored `.env.local` as `MIGRATION_DATABASE_URL`, then run `node --env-file=.env.local database/migrate.mjs`.
+Pull the integration-managed production variables, then run the migration with its non-pooling connection:
 
-Do not store `MIGRATION_DATABASE_URL` in Vercel. Delete it from `.env.local` when the migration succeeds.
+```bash
+vercel env pull .env.local --environment=production
+node --env-file=.env.local database/migrate.mjs
+```
 
 The migration is checksummed and runs once. Do not edit `001_initial` after it has been applied; add a new migration for later changes.
 

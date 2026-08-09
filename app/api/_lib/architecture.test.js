@@ -18,7 +18,7 @@ test("protects every public write with Turnstile and a durable rate limit", asyn
 
 test("uses a bounded unprepared Postgres connection for the Supabase pooler", async () => {
   const database = await readFile(new URL("./db.js", import.meta.url), "utf8");
-  assert.match(database, /postgres\(requireEnv\("DATABASE_URL"\)/);
+  assert.match(database, /postgres\(requireEnv\("POSTGRES_URL"\)/);
   assert.match(database, /max: 1/);
   assert.match(database, /prepare: false/);
   assert.doesNotMatch(database, /@neondatabase/);
