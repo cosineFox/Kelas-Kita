@@ -100,7 +100,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
         </a>
         <nav aria-label="Primary navigation">
           <a className="active" href="#explore">The class pile</a>
-          <a href="#principles">Robot rules</a>
+          <button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Community rules</button>
           <button onClick={() => onTrust({ mode: "overview" })}>Boring but important</button>
         </nav>
         <div className="header-actions">
@@ -170,7 +170,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
                 <div className="empty-state"><Search /><h3>{loading ? "Shuffling the paperwork" : query ? "Nothing. Suspicious." : "The whiteboard is empty"}</h3><p>{loading ? "Fetching the public catalogue and published reviews…" : submissionsOpen ? "Add it with a pending review and future students can find it here." : "Zero courses, zero fake activity. Additions open after the launch checks are signed."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add it in a review" : "Add the first course"}</button>}</div>
               )}
             </div>
-            <div className="moderation-banner" id="principles">
+            <div className="moderation-banner">
               <Bot />
               <span>Every review waits backstage. Tiny specialist robots flag trouble; boring fixed rules make the call.</span>
               <button onClick={() => onTrust({ mode: "overview" })}>Inspect the robot basement</button>
