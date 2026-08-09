@@ -215,7 +215,23 @@ create table rate_limit_buckets (
 create index rate_limit_expiry on rate_limit_buckets (expires_at);
 create index expiring_review_signals on review_signals (expires_at) where expires_at is not null;
 
-create view public_reviews as
+alter table universities enable row level security;
+alter table faculties enable row level security;
+alter table courses enable row level security;
+alter table course_aliases enable row level security;
+alter table lecturers enable row level security;
+alter table course_lecturers enable row level security;
+alter table reviews enable row level security;
+alter table review_signals enable row level security;
+alter table review_reports enable row level security;
+alter table review_appeals enable row level security;
+alter table lecturer_replies enable row level security;
+alter table moderation_decisions enable row level security;
+alter table moderation_jobs enable row level security;
+alter table rate_limit_buckets enable row level security;
+
+create view public_reviews
+with (security_invoker = true) as
 select
   id,
   course_id,
@@ -230,7 +246,8 @@ select
 from reviews
 where moderation = 'published';
 
-create view public_course_ratings as
+create view public_course_ratings
+with (security_invoker = true) as
 select
   course_id,
   lecturer_id,

@@ -42,6 +42,6 @@ Import this repository into Vercel with:
 - Framework Preset: `Vite`
 - `SUBMISSIONS_OPEN=false` until the production checks and human launch gates pass
 
-The full operator setup lives in [`app/docs/DEPLOYMENT.md`](app/docs/DEPLOYMENT.md). It covers Postgres, AI Gateway, Turnstile, Cloudflare and production verification.
+The full operator setup lives in [`app/docs/DEPLOYMENT.md`](app/docs/DEPLOYMENT.md). It covers Supabase Postgres, AI Gateway, Turnstile, Cloudflare and production verification.
 
 KelasKita is not affiliated with any university and does not use university logos.

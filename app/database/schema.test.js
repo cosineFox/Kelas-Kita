@@ -5,9 +5,31 @@ import { PGlite } from "@electric-sql/pglite";
 import { citext } from "@electric-sql/pglite/contrib/citext";
 import { pgcrypto } from "@electric-sql/pglite/contrib/pgcrypto";
 
-test("applies the production schema and excludes pending ratings", async () => {
+test("applies the protected production schema and excludes pending ratings", async () => {
   const database = new PGlite({ extensions: { citext, pgcrypto } });
   await database.exec(await readFile(new URL("./schema.sql", import.meta.url), "utf8"));
+
+  const protectedTables = await database.query(`
+    select count(*)::int as count
+    from pg_class tables
+    join pg_namespace schemas on schemas.oid = tables.relnamespace
+    where schemas.nspname = 'public' and tables.relrowsecurity and tables.relname in (
+      'universities', 'faculties', 'courses', 'course_aliases', 'lecturers',
+      'course_lecturers', 'reviews', 'review_signals', 'review_reports',
+      'review_appeals', 'lecturer_replies', 'moderation_decisions',
+      'moderation_jobs', 'rate_limit_buckets'
+    )
+  `);
+  assert.equal(protectedTables.rows[0].count, 14);
+  const protectedViews = await database.query(`
+    select count(*)::int as count
+    from pg_class views
+    join pg_namespace schemas on schemas.oid = views.relnamespace
+    where schemas.nspname = 'public'
+      and views.relname in ('public_reviews', 'public_course_ratings')
+      and 'security_invoker=true' = any(views.reloptions)
+  `);
+  assert.equal(protectedViews.rows[0].count, 2);
 
   const university = await database.query("insert into universities (name) values ('Example University') returning id");
   const universityId = university.rows[0].id;

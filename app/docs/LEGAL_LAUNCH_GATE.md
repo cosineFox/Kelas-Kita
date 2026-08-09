@@ -7,7 +7,7 @@ KelasKita processes identifiable lecturer information, potentially sensitive all
 ## Counsel questions
 
 1. Confirm whether and how the Personal Data Protection Act 2010 and the 2024 amendments apply to the operator and any donation/commercial activity; identify the data controller and each processor.
-2. Review the lawful basis, notice, disclosure, access/correction, security, retention and cross-border arrangements for Vercel, Neon, Cloudflare and Vercel AI Gateway/model providers.
+2. Review the lawful basis, notice, disclosure, access/correction, security, retention and cross-border arrangements for Vercel, Supabase, Cloudflare and Vercel AI Gateway/model providers.
 3. Decide whether a Data Protection Officer, registration, data-protection impact assessment or other formal step is required under the operator’s real scale and activities.
 4. Approve a data-breach response that meets the current Commissioner circular/guideline, including notification thresholds and timing.
 5. Review the automated-decision disclosure, meaningful human appeal and the decision to auto-publish low-risk reviews while holding grave allegations.

@@ -17,9 +17,9 @@
     "verify:production": "node scripts/check-production.mjs"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.1.0",
     "ai": "^7.0.55",
     "lucide-react": "^0.468.0",
+    "postgres": "^3.4.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.170.0",
