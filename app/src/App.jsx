@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import AmbientCanvas from "./components/AmbientCanvas";
 import Discovery from "./components/Discovery";
 import ModerationDashboard from "./components/ModerationDashboard";
+import ParodyGate, { shouldShowParodyGate } from "./components/ParodyGate";
 import ReviewFlow from "./components/ReviewFlow";
 import TrustCentre from "./components/TrustCentre";
 import { lecturerDuplicates, makeId } from "./lib/catalog";
@@ -30,6 +30,7 @@ export default function App() {
   const [data, setData] = useState(emptyState);
   const [serviceError, setServiceError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [gateOpen, setGateOpen] = useState(() => window.location.pathname !== "/moderation" && shouldShowParodyGate());
   const [reviewOpen, setReviewOpen] = useState(false);
   const [trustContext, setTrustContext] = useState(null);
 
@@ -117,10 +118,10 @@ export default function App() {
     catch (error) { return { ok: false, error: message(error) }; }
   };
 
-  const overlayOpen = reviewOpen || Boolean(trustContext);
+  const overlayOpen = gateOpen || reviewOpen || Boolean(trustContext);
   return (
     <>
-      <AmbientCanvas />
+      <ParodyGate open={gateOpen} onClose={() => setGateOpen(false)} />
       <div className={overlayOpen ? "app-underlay is-dimmed" : "app-underlay"} aria-hidden={overlayOpen || undefined} inert={overlayOpen ? "" : undefined}>
         <Discovery
           {...data}

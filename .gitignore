@@ -7,3 +7,5 @@ dist
 .env.*
 !.env.example
 .cloudflare-provisioning.json
+/app/.playwright-cli/
+/app/output/playwright/

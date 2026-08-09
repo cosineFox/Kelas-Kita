@@ -99,33 +99,34 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
           <span className="logo-mark">KK</span><span>KelasKita</span>
         </a>
         <nav aria-label="Primary navigation">
-          <a className="active" href="#explore">Explore</a>
-          <a href="#principles">How it works</a>
-          <button onClick={() => onTrust({ mode: "overview" })}>Trust centre</button>
+          <a className="active" href="#explore">The class pile</a>
+          <a href="#principles">Robot rules</a>
+          <button onClick={() => onTrust({ mode: "overview" })}>Boring but important</button>
         </nav>
         <div className="header-actions">
           <button className="mobile-trust-button" onClick={() => onTrust({ mode: "overview" })} aria-label="Trust centre">
             <ShieldCheck aria-hidden="true" />
           </button>
-          <button className="button primary" disabled={!submissionsOpen} onClick={onReview}><PenLine /> Write a review</button>
-          <span className="no-account">No account required</span>
+          <button className="button primary" disabled={!submissionsOpen} onClick={onReview}><PenLine /> Drop a review</button>
+          <span className="no-account">posting opens soon-ish</span>
         </div>
       </header>
 
       <main id="top">
-        {serviceError && <div className="service-status" role="status"><ShieldCheck /><span><strong>Submissions are paused.</strong> {serviceError} No records are being kept in this browser.</span></div>}
-        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>Pre-launch read-only mode.</strong> Legal and urgent-removal sign-offs are not complete, so the server will not accept submissions.</span></div>}
+        {serviceError && <div className="service-status" role="status"><ShieldCheck /><span><strong>The doors are still locked.</strong> {serviceError} No records are being kept in this browser.</span></div>}
+        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>Look, don’t touch mode.</strong> The boring legal and safety jobs are not finished, so submissions stay closed.</span></div>}
         <section className="hero">
           <div className="hero-copy">
-            <h1>Choose your next class with <span>context.</span></h1>
-            <p>An autonomous moderation experiment for student perspectives on teaching, workload, and learning.</p>
+            <span className="hero-sticker">student lore, now peer reviewed*</span>
+            <h1>Pick a class.<br />Dodge a <span>character arc.</span></h1>
+            <p>Course reviews, workload warnings, and teaching lore—moderated by robots on a very short leash.</p>
             <label className="search-box">
               <Search aria-hidden="true" />
               <span className="sr-only">Search courses, lecturers, or universities</span>
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search a course, lecturer, or university"
+                placeholder="Search the academic rumour mill…"
               />
               {query && <kbd>{filtered.length} found</kbd>}
             </label>
@@ -134,7 +135,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
 
         <section className="explore-layout" id="explore">
           <aside className="filters" aria-label="Course filters">
-            <div className="filters-title"><SlidersHorizontal /><h2>Browse</h2><button>Clear all</button></div>
+            <div className="filters-title"><SlidersHorizontal /><h2>Narrow the chaos</h2><button>Reset</button></div>
             <label>University<select><option>All universities</option></select></label>
             <label>Faculty<select><option>Engineering</option><option>All faculties</option></select></label>
             <fieldset>
@@ -153,7 +154,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
 
           <div className="results">
             <div className="results-heading">
-              <div><h2>{query ? "Search results" : courses.length ? "Trending this semester" : "Course directory"}</h2></div>
+              <div><h2>{query ? "Things matching that" : courses.length ? "Currently causing discourse" : "The class pile"}</h2></div>
               <label>Sort by:<select><option>Most reviews</option><option>Highest rated</option><option>Recently reviewed</option></select></label>
             </div>
             <div className="course-list">
@@ -166,19 +167,19 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
                   onToggle={() => setActiveCourse((id) => id === course.id ? null : course.id)}
                 />
               )) : (
-                <div className="empty-state"><Search /><h3>{loading ? "Loading the directory" : query ? "No matching class yet" : "No courses yet"}</h3><p>{loading ? "Fetching the public catalogue and published reviews…" : submissionsOpen ? "Add it with a pending review and it becomes available to future reviewers." : "The directory starts empty; additions open after the launch checks are signed."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add it in a review" : "Add the first course"}</button>}</div>
+                <div className="empty-state"><Search /><h3>{loading ? "Shuffling the paperwork" : query ? "Nothing. Suspicious." : "The whiteboard is empty"}</h3><p>{loading ? "Fetching the public catalogue and published reviews…" : submissionsOpen ? "Add it with a pending review and future students can find it here." : "Zero courses, zero fake activity. Additions open after the launch checks are signed."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add it in a review" : "Add the first course"}</button>}</div>
               )}
             </div>
             <div className="moderation-banner" id="principles">
               <Bot />
-              <span>Every review starts pending. Specialist agents classify risk; fixed policy rules decide the initial action.</span>
-              <button onClick={() => onTrust({ mode: "overview" })}>See how the Core works</button>
+              <span>Every review waits backstage. Tiny specialist robots flag trouble; boring fixed rules make the call.</span>
+              <button onClick={() => onTrust({ mode: "overview" })}>Inspect the robot basement</button>
             </div>
 
             <section className="recent-section">
-              <div className="results-heading"><div><h2>Recently reviewed</h2></div></div>
+              <div className="results-heading"><div><h2>Fresh from the group chat</h2></div></div>
               <div className="recent-table" role="table" aria-label="Recently reviewed courses">
-                {!recent.length && <p className="recent-empty">No reviews yet. The first accepted submission will appear here.</p>}
+                {!recent.length && <p className="recent-empty">Nobody has submitted the sacred paragraph yet.</p>}
                 {recent.map((review) => {
                   const course = courses.find((item) => item.id === review.courseId);
                   const lecturer = lecturers.find((item) => item.id === review.lecturerId);
@@ -198,7 +199,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
         </section>
       </main>
 
-      <footer><span>© 2026 KelasKita · Independent and not affiliated with any listed university.</span><nav><button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Guidelines</button><button onClick={() => onTrust({ mode: "overview", tab: "privacy" })}>Privacy</button><button onClick={() => onTrust({ mode: "overview", tab: "terms" })}>Terms</button><a href="#top">Back to top</a></nav></footer>
+      <footer><span>© 2026 KelasKita · Student-built, robot-supervised, not affiliated with any listed university.</span><nav><button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Rules</button><button onClick={() => onTrust({ mode: "overview", tab: "privacy" })}>Privacy</button><button onClick={() => onTrust({ mode: "overview", tab: "terms" })}>Legal-ish</button><a href="#top">Beam me up</a></nav></footer>
     </div>
   );
 }
