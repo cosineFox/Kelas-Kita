@@ -49,6 +49,13 @@ const publicError = (error) => {
   return new HttpError(500, "internal_error", "The service could not complete that request.");
 };
 
+const diagnostic = (error) => ({
+  cause: typeof error?.code === "string" ? error.code : undefined,
+  name: typeof error?.name === "string" ? error.name : undefined,
+  routine: typeof error?.routine === "string" ? error.routine : undefined,
+  severity: typeof error?.severity === "string" ? error.severity : undefined,
+});
+
 export const endpoint = (methods, handler) => async (request, response) => {
   const requestId = randomUUID();
   setHeaders(response, requestId);
@@ -63,7 +70,8 @@ export const endpoint = (methods, handler) => async (request, response) => {
   } catch (error) {
     const safe = publicError(error);
     if (safe.retryAfter) response.setHeader("Retry-After", safe.retryAfter);
-    console.error(JSON.stringify({ event: "api_error", requestId, code: safe.code }));
+    const details = safe.code === "internal_error" ? diagnostic(error) : {};
+    console.error(JSON.stringify({ event: "api_error", requestId, code: safe.code, ...details }));
     return sendJson(response, safe.status, { error: safe.message, code: safe.code, requestId });
   }
 };
