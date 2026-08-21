@@ -2,12 +2,19 @@ import { requireAdmin } from "../_lib/adminAuth.js";
 import { getSql } from "../_lib/db.js";
 import { endpoint, sendJson } from "../_lib/http.js";
 import { classifyContent, moderationModel } from "../_lib/moderation.js";
+import { assertSameOrigin } from "../_lib/origin.js";
 
 const present = (name) => Boolean(process.env[name]?.trim());
 
-export default endpoint(["GET"], async (request, response) => {
+export default endpoint(["GET", "POST"], async (request, response) => {
   requireAdmin(request);
   const sql = getSql();
+  if (request.method === "POST") {
+    assertSameOrigin(request);
+    await sql`alter table reviews drop constraint if exists reviews_semester_check`;
+    await sql`alter table reviews add constraint reviews_semester_check check (char_length(btrim(semester)) between 2 and 40)`;
+    return sendJson(response, 200, { ok: true, migration: "002_flexible_study_period" });
+  }
   const [database] = await sql`select now() as checked_at`;
   const live = request.query?.live === "1";
   const ai = live
