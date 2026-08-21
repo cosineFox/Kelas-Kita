@@ -115,7 +115,9 @@ function Overview({ initialTab, onNavigate }) {
   return (
     <div className="trust-overview">
       <nav className="trust-nav" aria-label="Trust centre sections">
-        {tabs.map(([id, label]) => <button className={tab === id ? "active" : ""} key={id} onClick={() => setTab(id)}>{label}</button>)}
+        <div className="trust-tabs">
+          {tabs.map(([id, label]) => <button className={tab === id ? "active" : ""} key={id} onClick={() => setTab(id)}>{label}</button>)}
+        </div>
         <div className="trust-actions">
           <button onClick={() => onNavigate({ mode: "report" })}><Flag /> Report content</button>
           <button onClick={() => onNavigate({ mode: "reply" })}><MessageSquareReply /> Right of reply</button>
