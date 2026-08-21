@@ -119,9 +119,9 @@ function Overview({ initialTab, onNavigate }) {
           {tabs.map(([id, label]) => <button className={tab === id ? "active" : ""} key={id} onClick={() => setTab(id)}>{label}</button>)}
         </div>
         <div className="trust-actions">
-          <button onClick={() => onNavigate({ mode: "report" })}><Flag /> Report content</button>
-          <button onClick={() => onNavigate({ mode: "reply" })}><MessageSquareReply /> Right of reply</button>
-          <button onClick={() => onNavigate({ mode: "appeal" })}><RotateCcw /> Appeal a decision</button>
+          <button onClick={() => onNavigate({ mode: "report" })}><Flag /><span>Report content</span></button>
+          <button onClick={() => onNavigate({ mode: "reply" })}><MessageSquareReply /><span>Right of reply</span></button>
+          <button onClick={() => onNavigate({ mode: "appeal" })}><RotateCcw /><span>Appeal a decision</span></button>
         </div>
       </nav>
       <article className="trust-article">
