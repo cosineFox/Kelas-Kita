@@ -2,6 +2,24 @@
 
 Do not open submissions until every verification in this document passes and the two human launch gates are signed.
 
+## Current production snapshot
+
+Last verified: 22 August 2026.
+
+- Repository: `cosineFox/Kelas-Kita`, branch `main`
+- Vercel project: `cosinefoxs-projects/kelas-kita`, with Root Directory `app`
+- Public origin: `https://kelaskita.catbox404.dev`
+- Database: Supabase Postgres through the Vercel-managed connection variables
+- Moderation model: `alibaba/qwen3.7-flash` through Vercel AI Gateway, with reasoning disabled for structured output
+- Cloudflare DNS: proxied
+- Request-header rule: `KelasKita trusted edge origin gate`
+- Rate-limit rule: `KelasKita write surge guard`
+- Submission state: closed until the human gates in section 6 are complete
+
+The request-header rule applies to `kelaskita.catbox404.dev/api/*` and overwrites `X-KelasKita-Edge-Key` with the same `EDGE_PROXY_SECRET` stored in Vercel. The active Free-plan rate rule blocks a source IP for 10 seconds after more than 20 `POST` requests to `/api/*` in 10 seconds. The application and Postgres retain their own lower, durable limits.
+
+Generated production secrets are also stored in the operator Mac's login Keychain as generic-password items named `KelasKita:<ENVIRONMENT_VARIABLE>`. Their values must never be committed. Keychain Access may live at `/System/Library/CoreServices/Applications/Keychain Access.app` on newer macOS releases.
+
 ## 1. Create the Vercel and Supabase projects
 
 ```bash
@@ -45,7 +63,7 @@ The migration is checksummed and runs once. Do not edit `001_initial` after it h
 
 ## 4. Provision Turnstile and the Cloudflare edge rule
 
-Create a scoped Cloudflare API token with `Turnstile Sites Write`, `Zone WAF Write`, `Zone Rulesets Write`, `Transform Rules Write` and later `DNS Write` for the one zone. Export the account, zone, final hostname and the same `EDGE_PROXY_SECRET` stored in Vercel, then run:
+For repeatable automated provisioning, create a scoped Cloudflare API token with `Turnstile Sites Write`, `Zone WAF Write`, `Zone Rulesets Write`, `Transform Rules Write` and later `DNS Write` for the one zone. Export the account, zone, final hostname and the same `EDGE_PROXY_SECRET` stored in Vercel, then run:
 
 ```bash
 npm run infra:cloudflare
@@ -53,7 +71,9 @@ npm run infra:cloudflare
 
 For a new widget, this writes `.cloudflare-provisioning.json` with mode `0600`; the file is git-ignored. Copy its site key to `VITE_TURNSTILE_SITE_KEY`, its secret to `TURNSTILE_SECRET_KEY`, and the final host to `TURNSTILE_HOSTNAMES` in Vercel. Delete the local credentials file after the Vercel variables are confirmed.
 
-The script also creates one Cloudflare rate rule for bursts above 20 API writes in 10 seconds per edge location and source IP. A request-header transform overwrites `X-KelasKita-Edge-Key` before `/api/` reaches Vercel; production writes reject requests without the matching server secret. This prevents direct-origin requests from bypassing the Cloudflare layer. Postgres independently enforces the lower product limits, so delayed or approximate edge counters cannot publish extra records.
+The same rules can be created manually in the Cloudflare dashboard. Create a Request Header Transform Rule matching `(http.host eq "kelaskita.catbox404.dev" and starts_with(http.request.uri.path, "/api/"))`, then set the static `X-KelasKita-Edge-Key` header. Create one Rate Limiting Rule matching `(http.host eq "kelaskita.catbox404.dev" and http.request.method eq "POST" and starts_with(http.request.uri.path, "/api/"))`, grouped by IP, with 20 requests per 10 seconds and a 10-second block. Cloudflare Free currently exposes one such rule and the Block action.
+
+Production writes reject requests without the matching server secret. Postgres independently enforces the lower product limits, so delayed or approximate edge counters cannot publish extra records.
 
 ## 5. Deploy, then ask Vercel for the DNS value
 
@@ -82,7 +102,7 @@ Redeploy once the Turnstile public key is present, then run:
 PUBLIC_ORIGIN="https://$PUBLIC_HOSTNAME" ADMIN_SECRET='the-local-copy' npm run verify:production
 ```
 
-This checks the public state boundary, operator session, database, complete configuration and a real `thinkingmachines/inkling-small` AI Gateway request. It fails closed if the credential or model is unavailable.
+This checks the public state boundary, operator session, database, complete configuration and a real request to the configured AI Gateway model. Production currently uses `alibaba/qwen3.7-flash`. It fails closed if the credential or model is unavailable.
 
 Then use a real browser to complete one staging submission and report. Confirm:
 
