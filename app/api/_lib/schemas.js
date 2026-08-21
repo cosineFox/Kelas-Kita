@@ -15,7 +15,7 @@ const lecturer = z.object({ name: text(2, 160) });
 export const reviewInput = z.object({
   course,
   lecturer,
-  semester: z.enum(["Semester 1", "Semester 2", "Summer"]),
+  semester: text(2, 40),
   year: z.coerce.number().int().min(2000).max(2100),
   courseRating: z.number().int().min(1).max(5),
   lecturerRating: z.number().int().min(1).max(5),

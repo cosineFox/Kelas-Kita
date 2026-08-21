@@ -68,7 +68,7 @@ export default function ReviewFlow({
   const [draft, setDraft] = useState({
     courseId: initialCourse?.id ?? "",
     lecturerId: initialLecturer?.id ?? "",
-    semester: "Semester 2",
+    semester: "",
     year: "2026",
     courseRating: 0,
     lecturerRating: 0,
@@ -125,7 +125,7 @@ export default function ReviewFlow({
   };
 
   const canContinue =
-    (step === 0 && draft.courseId && draft.lecturerId) ||
+    (step === 0 && draft.courseId && draft.lecturerId && draft.semester.trim() && draft.year) ||
     (step === 1 && draft.courseRating && draft.lecturerRating) ||
     (step === 2 && draft.body.trim().length >= 70) ||
     step === 3;
@@ -260,8 +260,8 @@ export default function ReviewFlow({
                 )}
 
                 <div className="two-fields">
-                  <label>Semester<select value={draft.semester} onChange={(event) => setDraft((value) => ({ ...value, semester: event.target.value }))}><option>Semester 1</option><option>Semester 2</option><option>Summer</option></select></label>
-                  <label>Year<select value={draft.year} onChange={(event) => setDraft((value) => ({ ...value, year: event.target.value }))}><option>2026</option><option>2025</option><option>2024</option></select></label>
+                  <label>Study period<input required maxLength="40" value={draft.semester} onChange={(event) => setDraft((value) => ({ ...value, semester: event.target.value }))} placeholder="Semester 1, Trimester 2, Term 3…" /></label>
+                  <label>Academic year begins<input required type="number" min="2000" max="2100" value={draft.year} onChange={(event) => setDraft((value) => ({ ...value, year: event.target.value }))} /></label>
                 </div>
               </div>
 
@@ -321,7 +321,7 @@ export default function ReviewFlow({
             <div className="check-step">
               <div className="step-intro"><h3>Check the context, then send.</h3><p>Your review enters a trust queue before it affects public scores.</p></div>
               <div className="review-summary">
-                <dl><div><dt>Course</dt><dd>{selectedCourse?.code} · {selectedCourse?.name}</dd></div><div><dt>Lecturer</dt><dd>{selectedLecturer?.name}</dd></div><div><dt>Term</dt><dd>{draft.semester}, {draft.year}</dd></div><div><dt>Ratings</dt><dd>Course {draft.courseRating}/5 · Lecturer {draft.lecturerRating}/5</dd></div></dl>
+                <dl><div><dt>Course</dt><dd>{selectedCourse?.code} · {selectedCourse?.name}</dd></div><div><dt>Lecturer</dt><dd>{selectedLecturer?.name}</dd></div><div><dt>Study period</dt><dd>{draft.semester} · {draft.year}</dd></div><div><dt>Ratings</dt><dd>Course {draft.courseRating}/5 · Lecturer {draft.lecturerRating}/5</dd></div></dl>
                 <blockquote>{draft.body}</blockquote>
               </div>
               <div className="trust-queue"><ShieldCheck /><div><strong>Screened, logged and appealable</strong><p>Strong criticism stays allowed. The agents classify risk; the Core never declares an allegation true, defamatory or proof of guilt.</p></div></div>

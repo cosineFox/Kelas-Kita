@@ -5,7 +5,7 @@ import { appealInput, reportInput, reviewInput } from "./schemas.js";
 const review = {
   course: { code: "COMP2013", name: "Algorithms", university: "Example University", faculty: "Engineering" },
   lecturer: { name: "Dr Aisha Rahman" },
-  semester: "Semester 2",
+  semester: "Trimester 2",
   year: "2026",
   courseRating: 4,
   lecturerRating: 5,
@@ -16,6 +16,11 @@ const review = {
 
 test("accepts a bounded review and coerces its academic year", () => {
   assert.equal(reviewInput.parse(review).year, 2026);
+  assert.equal(reviewInput.parse(review).semester, "Trimester 2");
+});
+
+test("accepts school-specific study periods", () => {
+  assert.equal(reviewInput.parse({ ...review, semester: "Teaching Block B" }).semester, "Teaching Block B");
 });
 
 test("rejects invented report reasons", () => {

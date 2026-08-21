@@ -48,6 +48,7 @@ test("commits catalogue, pending review, queue and publication on the server", a
   process.env.ABUSE_HASH_SECRET = "test-abuse-secret-with-enough-entropy";
   const database = new PGlite({ extensions: { citext, pgcrypto } });
   await database.exec(await readFile(new URL("../../database/schema.sql", import.meta.url), "utf8"));
+  await database.exec(await readFile(new URL("../../database/migrations/002_flexible_study_period.sql", import.meta.url), "utf8"));
   setSqlForTests(adapter(database));
 
   const request = {
@@ -57,7 +58,7 @@ test("commits catalogue, pending review, queue and publication on the server", a
   const input = {
     course: { code: "COMP2013", name: "Algorithms", university: "Example University", faculty: "Engineering" },
     lecturer: { name: "Dr Aisha Rahman" },
-    semester: "Semester 2",
+    semester: "Trimester 2",
     year: 2026,
     courseRating: 4,
     lecturerRating: 5,

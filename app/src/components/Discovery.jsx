@@ -108,13 +108,13 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
             <ShieldCheck aria-hidden="true" />
           </button>
           <button className="button primary" disabled={!submissionsOpen} onClick={onReview}><PenLine /> Drop a review</button>
-          <span className="no-account">posting opens soon-ish</span>
+          <span className="no-account">{submissionsOpen ? "posting is open" : "posting is paused"}</span>
         </div>
       </header>
 
       <main id="top">
         {serviceError && <div className="service-status" role="status"><ShieldCheck /><span><strong>The doors are still locked.</strong> {serviceError} No records are being kept in this browser.</span></div>}
-        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>Look, don’t touch mode.</strong> The boring legal and safety jobs are not finished, so submissions stay closed.</span></div>}
+        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>Look, don’t touch mode.</strong> The operator has paused new submissions.</span></div>}
         <section className="hero">
           <div className="hero-copy">
             <span className="hero-sticker">student lore, now peer reviewed*</span>
@@ -144,12 +144,6 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
               <label><input type="checkbox" checked={engineeringOnly} onChange={(event) => setEngineeringOnly(event.target.checked)} /> Undergraduate</label>
               <label><input type="checkbox" /> Postgraduate</label>
             </fieldset>
-            <fieldset>
-              <legend>Semester</legend>
-              <label><input type="radio" name="semester" defaultChecked /> 2026/2027 Semester 1</label>
-              <label><input type="radio" name="semester" /> 2025/2026 Semester 2</label>
-              <label><input type="radio" name="semester" /> All semesters</label>
-            </fieldset>
           </aside>
 
           <div className="results">
@@ -167,7 +161,10 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
                   onToggle={() => setActiveCourse((id) => id === course.id ? null : course.id)}
                 />
               )) : (
-                <div className="empty-state"><Search /><h3>{loading ? "Shuffling the paperwork" : query ? "Nothing. Suspicious." : "The whiteboard is empty"}</h3><p>{loading ? "Fetching the public catalogue and published reviews…" : submissionsOpen ? "Add it with a pending review and future students can find it here." : "Zero courses, zero fake activity. Additions open after the launch checks are signed."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add it in a review" : "Add the first course"}</button>}</div>
+                <div className="empty-state">
+                  <div className="empty-pin-grid" aria-hidden="true">{Array.from({ length: 6 }, (_, index) => <span key={index} />)}</div>
+                  <div className="empty-copy"><Search /><h3>{loading ? "Shuffling the paperwork" : query ? "Nothing. Suspicious." : "Nothing pinned yet"}</h3><p>{loading ? "Fetching the public catalogue and published reviews…" : submissionsOpen ? "Pin a course with a pending review and future students can find it here." : "Zero courses, zero fake activity. New pins appear when submissions reopen."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add it in a review" : "Pin the first course"}</button>}</div>
+                </div>
               )}
             </div>
             <div className="moderation-banner">
