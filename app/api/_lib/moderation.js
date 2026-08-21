@@ -3,7 +3,7 @@ import { z } from "zod";
 import { analyseFeedback } from "../../src/lib/moderation.js";
 import { decideModeration } from "../../src/lib/moderationCore.js";
 
-export const moderationModel = process.env.MODERATION_MODEL ?? "thinkingmachines/inkling-small";
+export const moderationModel = "alibaba/qwen3.7-flash";
 
 const agentSchema = z.object({
   agent: z.enum(["allegation", "integrity", "privacy", "safety"]),

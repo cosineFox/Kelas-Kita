@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import Discovery from "./components/Discovery";
 import ModerationDashboard from "./components/ModerationDashboard";
-import ParodyGate, { shouldShowParodyGate } from "./components/ParodyGate";
 import ReviewFlow from "./components/ReviewFlow";
+import TermsGate, { hasAcceptedTerms } from "./components/TermsGate";
 import TrustCentre from "./components/TrustCentre";
 import { lecturerDuplicates, makeId } from "./lib/catalog";
 import {
@@ -30,7 +30,7 @@ export default function App() {
   const [data, setData] = useState(emptyState);
   const [serviceError, setServiceError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [gateOpen, setGateOpen] = useState(() => window.location.pathname !== "/moderation" && shouldShowParodyGate());
+  const [termsOpen, setTermsOpen] = useState(() => window.location.pathname !== "/moderation" && !hasAcceptedTerms());
   const [reviewOpen, setReviewOpen] = useState(false);
   const [trustContext, setTrustContext] = useState(null);
 
@@ -119,11 +119,15 @@ export default function App() {
   };
 
   const contentOverlayOpen = reviewOpen || Boolean(trustContext);
-  const interactionBlocked = gateOpen || contentOverlayOpen;
+  const interactionBlocked = termsOpen || contentOverlayOpen;
   return (
     <>
-      <ParodyGate open={gateOpen} onClose={() => setGateOpen(false)} />
-      <div className={contentOverlayOpen ? "app-underlay is-dimmed" : "app-underlay"} aria-hidden={interactionBlocked || undefined} inert={interactionBlocked ? "" : undefined}>
+      <TermsGate
+        open={termsOpen && !trustContext}
+        onAccept={() => setTermsOpen(false)}
+        onReadTerms={() => setTrustContext({ mode: "overview", tab: "terms" })}
+      />
+      <div className={interactionBlocked ? "app-underlay is-dimmed" : "app-underlay"} aria-hidden={interactionBlocked || undefined} inert={interactionBlocked ? "" : undefined}>
         <Discovery
           {...data}
           loading={loading}
