@@ -126,7 +126,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search the academic rumour mill…"
+                placeholder="Consult the rumour mill…"
               />
               {query && <kbd>{filtered.length} found</kbd>}
             </label>
