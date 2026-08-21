@@ -14,7 +14,7 @@ Last verified: 22 August 2026.
 - Cloudflare DNS: proxied
 - Request-header rule: `KelasKita trusted edge origin gate`
 - Rate-limit rule: `KelasKita write surge guard`
-- Submission state: closed until the final workflow check in section 6 is complete
+- Submission state: open; launched from zero public courses, lecturers and reviews on 22 August 2026
 
 The request-header rule applies to `kelaskita.catbox404.dev/api/*` and overwrites `X-KelasKita-Edge-Key` with the same `EDGE_PROXY_SECRET` stored in Vercel. The active Free-plan rate rule blocks a source IP for 10 seconds after more than 20 `POST` requests to `/api/*` in 10 seconds. The application and Postgres retain their own lower, durable limits.
 
