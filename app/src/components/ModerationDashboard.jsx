@@ -49,7 +49,7 @@ function Login({ onAuthenticated }) {
         <LockKeyhole />
         <span className="eyebrow">Private operator surface</span>
         <h1>Moderation console</h1>
-        <p>Public reviewers never log in. This session is only for the named human removal rota.</p>
+        <p>Public reviewers never log in. This private queue is only for unusual cases and operator overrides.</p>
         <label>Operator secret<input type="password" autoComplete="current-password" value={secret} onChange={(event) => setSecret(event.target.value)} /></label>
         {error && <p className="publish-error"><AlertTriangle /> {error}</p>}
         <button className="button primary" disabled={submitting || secret.length < 20}>{submitting ? "Checking…" : "Open queue"}</button>
@@ -137,7 +137,7 @@ export default function ModerationDashboard() {
   return (
     <main className="moderation-console">
       <header className="moderation-topbar">
-        <div><span className="logo-mark">KK</span><strong>Human moderation</strong><small>Private · Core 0.1</small></div>
+        <div><span className="logo-mark">KK</span><strong>Operator exceptions</strong><small>Private · Core 0.1</small></div>
         <nav>
           <a href="/"><ArrowLeft /> Public site</a>
           <button disabled={busy} onClick={runQueue}><Bot /> Run queue</button>
@@ -184,7 +184,7 @@ export default function ModerationDashboard() {
             {selected.lastError && <div className="job-error"><AlertTriangle /> Retry queue: {selected.lastError}</div>}
             {selected.agentFindings.length > 0 && <section className="agent-findings"><h3>Private agent findings</h3>{selected.agentFindings.map((finding) => <div key={finding.agent}><strong>{finding.agent}</strong><span>{finding.severity}</span><p>{finding.rationale}</p></div>)}</section>}
             <section className="human-decision">
-              <h3>Human decision</h3>
+              <h3>Operator override</h3>
               <label>Private reason<input value={reason} maxLength={500} placeholder="Record the policy basis and evidence considered…" onChange={(event) => setReason(event.target.value)} /></label>
               <div>{actions[selected.kind].map(([action, label]) => <button key={action} className={action === "remove" || action === "reject" ? "danger" : ""} disabled={busy || reason.trim().length < 10} onClick={() => decide(action)}>{label}</button>)}</div>
               {["retry", "dead"].includes(selected.jobState) && <button className="retry-button" disabled={busy} onClick={retry}><RefreshCw /> Retry agent job now</button>}

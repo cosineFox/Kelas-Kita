@@ -1,6 +1,6 @@
-# Malaysian legal launch gate
+# Malaysian legal considerations
 
-Status: **external counsel review required**. This is an engineering issue list, not a legal opinion or a claim of compliance.
+Status: **advisory checklist**. This is an engineering issue list, not a legal opinion or a claim of compliance.
 
 KelasKita processes identifiable lecturer information, potentially sensitive allegations, abuse-prevention signals, private contact details and automated moderation outputs across several providers. Malaysian counsel should record advice against the actual operator, funding model, university scope, provider regions and final policies—not against a hypothetical service.
 
@@ -50,4 +50,4 @@ The Content Code was under review in 2025. Counsel must check the version in for
 - Re-review trigger/date:
 - Signed launch decision:
 
-Blank fields mean the legal gate is open and submissions stay closed.
+This record is optional operational evidence and is not enforced by the application launch gate.

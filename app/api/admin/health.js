@@ -4,11 +4,6 @@ import { endpoint, sendJson } from "../_lib/http.js";
 import { classifyContent, moderationModel } from "../_lib/moderation.js";
 
 const present = (name) => Boolean(process.env[name]?.trim());
-const validDate = (name) => {
-  const value = process.env[name]?.trim();
-  const timestamp = Date.parse(value ?? "");
-  return !Number.isNaN(timestamp) && timestamp <= Date.now();
-};
 
 export default endpoint(["GET"], async (request, response) => {
   requireAdmin(request);
@@ -30,14 +25,10 @@ export default endpoint(["GET"], async (request, response) => {
       contactEncryption: present("CONTACT_ENCRYPTION_KEY"),
       cron: present("CRON_SECRET"),
       edgeProxy: present("EDGE_PROXY_SECRET"),
-      legalReview: validDate("LEGAL_REVIEW_SIGNED_AT"),
       operatorContact: present("OPERATOR_CONTACT_EMAIL"),
       publicOrigin: present("PUBLIC_ORIGIN"),
       submissionsOpen: process.env.SUBMISSIONS_OPEN === "true",
       turnstile: present("TURNSTILE_SECRET_KEY") && present("TURNSTILE_HOSTNAMES"),
-      urgentPrimary: present("URGENT_REMOVAL_PRIMARY"),
-      urgentBackup: present("URGENT_REMOVAL_BACKUP"),
-      urgentRota: validDate("URGENT_ROTA_TESTED_AT"),
     },
   });
 });

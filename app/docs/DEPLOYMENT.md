@@ -1,6 +1,6 @@
 # Production deployment
 
-Do not open submissions until every verification in this document passes and the two human launch gates are signed.
+Keep submissions closed until the automated checks pass and one monitored operator contact is configured.
 
 ## Current production snapshot
 
@@ -14,7 +14,7 @@ Last verified: 22 August 2026.
 - Cloudflare DNS: proxied
 - Request-header rule: `KelasKita trusted edge origin gate`
 - Rate-limit rule: `KelasKita write surge guard`
-- Submission state: closed until the human gates in section 6 are complete
+- Submission state: closed until the final workflow check in section 6 is complete
 
 The request-header rule applies to `kelaskita.catbox404.dev/api/*` and overwrites `X-KelasKita-Edge-Key` with the same `EDGE_PROXY_SECRET` stored in Vercel. The active Free-plan rate rule blocks a source IP for 10 seconds after more than 20 `POST` requests to `/api/*` in 10 seconds. The application and Postgres retain their own lower, durable limits.
 
@@ -46,7 +46,7 @@ openssl rand -hex 32       # EDGE_PROXY_SECRET
 
 Add every server-only runtime field in [`.env.example`](../.env.example) to Production and Preview in Vercel, except the infrastructure-only Cloudflare fields. Add `VITE_TURNSTILE_SITE_KEY` only after step 4. `PUBLIC_ORIGIN` must be the final `https://subdomain.example.com` origin, with no trailing slash. `TURNSTILE_HOSTNAMES` is a comma-separated hostname list without schemes.
 
-Set `OPERATOR_CONTACT_EMAIL`, `URGENT_REMOVAL_PRIMARY` and `URGENT_REMOVAL_BACKUP` to real, monitored values. They are health gates, not decorative metadata. Keep `SUBMISSIONS_OPEN=false` until the final step.
+Set `OPERATOR_CONTACT_EMAIL` to one monitored address. KelasKita is exception-driven: routine reviews are automated, while unusual appeals and takedown disputes reach this address. Keep `SUBMISSIONS_OPEN=false` until the final step.
 
 Vercel supplies an OIDC token to AI Gateway in a linked deployment. `AI_GATEWAY_API_KEY` is only needed when OIDC is unavailable. Never prefix either server credential with `VITE_`.
 
@@ -115,4 +115,4 @@ Then use a real browser to complete one staging submission and report. Confirm:
 7. A direct-origin production write without the Cloudflare edge header returns 403.
 8. “Run queue” and “Run live AI test” both succeed.
 
-Finally complete the legal gate and urgent-removal drill. Record their real ISO timestamps in `LEGAL_REVIEW_SIGNED_AT` and `URGENT_ROTA_TESTED_AT`, set `SUBMISSIONS_OPEN=true`, redeploy, and rerun the production verification. A successful deployment alone is not launch authorisation.
+After the synthetic workflow passes, set `SUBMISSIONS_OPEN=true`, redeploy, and rerun production verification. The operator should periodically sample automated decisions and handle exceptional appeals or takedown disputes through the private moderation page.
