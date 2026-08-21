@@ -45,6 +45,7 @@ export const classifyContent = async ({ kind, text, report = null }) => {
         schema: councilSchema,
       }),
       prompt: JSON.stringify({ task: kind, content_under_review: text, report_context: report }),
+      reasoning: "none",
       abortSignal: AbortSignal.timeout(15_000),
       temperature: 0,
       maxOutputTokens: 600,
