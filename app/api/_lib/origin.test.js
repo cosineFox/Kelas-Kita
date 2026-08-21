@@ -23,7 +23,7 @@ test("requires the Cloudflare origin gate on production writes", (context) => {
   process.env.EDGE_PROXY_SECRET = "edge_secret_with_more_than_forty_characters_123456";
 
   const request = { headers: { origin: process.env.PUBLIC_ORIGIN, host: "reviews.example.com" } };
-  assert.throws(() => assertSameOrigin(request), /trusted edge/i);
+  assert.throws(() => assertSameOrigin(request), /at the edge/i);
   request.headers["x-kelaskita-edge-key"] = process.env.EDGE_PROXY_SECRET;
   assert.doesNotThrow(() => assertSameOrigin(request));
 });

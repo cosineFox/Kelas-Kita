@@ -8,7 +8,7 @@ const assertTrustedEdge = (request) => {
   if (!isProduction()) return;
   const supplied = request.headers["x-kelaskita-edge-key"] ?? "";
   if (!timingSafeEqual(digest(supplied), digest(requireEnv("EDGE_PROXY_SECRET")))) {
-    throw new HttpError(403, "untrusted_edge", "The request did not arrive through the trusted edge.");
+    throw new HttpError(403, "untrusted_edge", "KelasKita rejected the request at the edge.");
   }
 };
 
@@ -18,7 +18,7 @@ export const assertSameOrigin = (request) => {
   const supplied = request.headers.origin;
   const host = (request.headers.host ?? "").toLowerCase();
   if (!supplied || supplied !== expected || host !== configured.host.toLowerCase()) {
-    throw new HttpError(403, "invalid_origin", "The request origin could not be verified.");
+    throw new HttpError(403, "invalid_origin", "KelasKita could not verify the request origin.");
   }
   assertTrustedEdge(request);
 };

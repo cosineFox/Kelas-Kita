@@ -48,7 +48,7 @@ export default function ParodyGate({ open, onClose }) {
     >
       <div className="gate-grid" aria-hidden="true" />
       <header className="gate-header">
-        <span>DEFINITELY NOT ANUBIS™</span>
+        <span>NOT ANUBIS™</span>
         <span>GATE 404 · BUILD 0.0.0</span>
       </header>
       <div className="gate-body">
@@ -63,17 +63,17 @@ export default function ParodyGate({ open, onClose }) {
         <div className="gate-copy">
           <p className="gate-kicker">The Department of Suspicious Academics presents</p>
           <h1 id="parody-gate-title">Weighing your<br /><em>academic soul.</em></h1>
-          <p className="gate-intro">One browser. One feather. Absolutely no scientific validity.</p>
+          <p className="gate-intro">We compare one browser with one feather using no valid science.</p>
           <ol className="gate-checks" aria-label="Parody checks in progress">
-            <li>checking for suspiciously fast clicking</li>
+            <li>checking click speed</li>
             <li>consulting the sacred attendance sheet</li>
-            <li>pretending this was extremely technical</li>
+            <li>pretending this required advanced engineering</li>
           </ol>
           <div className="gate-progress" aria-hidden="true"><span /></div>
         </div>
       </div>
       <footer className="gate-footer">
-        <p>Parody screen only. Real bot checks happen when something is submitted.</p>
+        <p>This screen is a parody. Real bot checks run when you submit something.</p>
         <button type="button" onClick={dismiss} autoFocus>skip the ritual →</button>
       </footer>
     </section>

@@ -145,10 +145,10 @@ export default function ReviewFlow({
 
   if (submission) {
     const stateCopy = {
-      held: ["Held for specialist review.", "It is not public and does not affect ratings. Serious claims should also be reported through the university’s official channel."],
-      pending: ["Waiting for the agent council.", "It remains private and does not affect ratings until the Core reaches a decision."],
-      published: ["Screened and published.", "The review now appears publicly and its ratings are included in the course score."],
-      rejected: ["Not published.", "The Core detected an urgent safety or privacy issue. You may challenge this through the appeal route."],
+      held: ["Specialist review required.", "We keep this review private and exclude its ratings. Send serious claims to your university’s formal reporting channel too."],
+      pending: ["The Core is reviewing it.", "We keep this review private and exclude its ratings until the Core decides."],
+      published: ["The Core published your review.", "Students can read it and its ratings count towards the course score."],
+      rejected: ["The Core withheld your review.", "A safety or privacy signal triggered this decision. Use your receipt to appeal."],
     }[submission.review.status];
     return (
       <div className="review-layer" role="dialog" aria-modal="true" aria-labelledby="success-title">
@@ -157,8 +157,8 @@ export default function ReviewFlow({
           <div className="success-mark"><ShieldCheck /></div>
           <h2 id="success-title">{stateCopy[0]}</h2>
           <p>{stateCopy[1]}</p>
-          <div className="success-checks"><span><Check /> Began as pending</span><span><Check /> Ratings excluded until publication</span><span><Bot /> Core action: {submission.decision.action.replaceAll("_", " ")}</span></div>
-          {submission.receipt && <div className="moderation-receipt"><strong>Save your private moderation receipt</strong><code>{submission.receipt}</code><small>It is shown once and can support a future appeal. Do not post it publicly.</small></div>}
+          <div className="success-checks"><span><Check /> Started as pending</span><span><Check /> We excluded ratings until publication</span><span><Bot /> Core action: {submission.decision.action.replaceAll("_", " ")}</span></div>
+          {submission.receipt && <div className="moderation-receipt"><strong>Save your private moderation receipt</strong><code>{submission.receipt}</code><small>We show it once. Use it for an appeal and keep it private.</small></div>}
           <button className="button primary" onClick={onClose}>Back to Explore <ArrowRight /></button>
         </section>
       </div>
@@ -173,7 +173,7 @@ export default function ReviewFlow({
         <header className="review-header">
           <div>
             <h2 id="review-title" ref={titleRef} tabIndex="-1">Write a useful review</h2>
-            <p>Specific feedback helps the next student — and the teaching team.</p>
+            <p>Specific feedback helps students and teaching teams.</p>
           </div>
           <button className="icon-button" onClick={onClose} aria-label="Close"><X /></button>
         </header>
@@ -223,7 +223,7 @@ export default function ReviewFlow({
 
                 {addingCourse && (
                   <div className="add-form">
-                    <div className="add-heading"><strong>Or add a course</strong><span>Staged now; committed with this review.</span></div>
+                    <div className="add-heading"><strong>Or add a course</strong><span>We save it when you submit this review.</span></div>
                     <div className="field-grid">
                       {[
                         ["code", "Course code", "e.g., COMP2013"],
@@ -235,7 +235,7 @@ export default function ReviewFlow({
                       ))}
                     </div>
                     <div className={`duplicate-state ${duplicates.length ? "has-match" : ""}`}>
-                      {duplicates.length ? <><AlertTriangle /><span><strong>Possible duplicate:</strong> {duplicates[0].course.code} · {duplicates[0].course.name}</span><button onClick={() => selectCourse(duplicates[0].course)}>Use existing</button></> : <><CircleCheck /><span>No close duplicate found</span></>}
+                      {duplicates.length ? <><AlertTriangle /><span><strong>Possible duplicate:</strong> {duplicates[0].course.code} · {duplicates[0].course.name}</span><button onClick={() => selectCourse(duplicates[0].course)}>Use existing</button></> : <><CircleCheck /><span>We found no close duplicate</span></>}
                     </div>
                     <button className="button secondary save-course" type="button" disabled={Object.values(newCourse).some((value) => !value.trim()) || duplicates.length > 0} onClick={saveCourse}>Save course</button>
                   </div>
@@ -253,7 +253,7 @@ export default function ReviewFlow({
                 </div>
                 {addingLecturer && (
                   <div className="inline-add">
-                    <label>Lecturer name<input value={newLecturer} onChange={(event) => setNewLecturer(event.target.value)} placeholder="Include title if commonly used" /></label>
+                    <label>Lecturer name<input value={newLecturer} onChange={(event) => setNewLecturer(event.target.value)} placeholder="Include the title students use" /></label>
                     {lecturerMatches.length > 0 && <p><AlertTriangle /> A similar lecturer already exists: {lecturerMatches[0].name}</p>}
                     <button className="button secondary" onClick={saveLecturer} disabled={!newLecturer.trim()}>Save & link</button>
                   </div>
@@ -266,41 +266,41 @@ export default function ReviewFlow({
               </div>
 
               <aside className="relation-note">
-                <h3>What happens to additions?</h3>
-                <p>We check course codes, aliases, and lecturer names for duplicates. New records are committed with the pending review and then remain selectable.</p>
+                <h3>Adding a course</h3>
+                <p>We compare course codes, aliases and lecturer names. We save new records with the review. Students can select them after publication.</p>
                 <div className="relation-map">
                   <div><strong>Course</strong><span>{selectedCourse?.code ?? "New course"}</span></div>
                   <span>taught by <ArrowRight /></span>
                   <div><strong>Multiple lecturers</strong><span>{linkedLecturers.length || "1+"} linked</span></div>
                 </div>
-                <div className="info-note"><CircleCheck /> You can add a course once. It will be available for other students to select later.</div>
+                <div className="info-note"><CircleCheck /> One submission can add one course and link its lecturers.</div>
               </aside>
             </div>
           )}
 
           {step === 1 && (
             <div className="rating-step">
-              <div className="step-intro"><h3>Rate the class, not the mood.</h3><p>Separate the course design from the lecturer’s delivery. Both can be true at once.</p></div>
+              <div className="step-intro"><h3>Rate both parts.</h3><p>Score the course design and the lecturer’s delivery as separate parts of your experience.</p></div>
               <div className="rating-panels">
                 <div><span>Course</span><h4>{selectedCourse?.name}</h4><p>Materials, assessments, structure, and learning value.</p><Stars label="Course rating" value={draft.courseRating} onChange={(courseRating) => setDraft((value) => ({ ...value, courseRating }))} /></div>
                 <div><span>Lecturer</span><h4>{selectedLecturer?.name}</h4><p>Clarity, support, feedback, and delivery.</p><Stars label="Lecturer rating" value={draft.lecturerRating} onChange={(lecturerRating) => setDraft((value) => ({ ...value, lecturerRating }))} /></div>
               </div>
-              <fieldset className="workload-field"><legend>How did the workload feel?</legend>{["Light", "Balanced", "Heavy", "Extreme"].map((workload) => <button type="button" className={draft.workload === workload ? "selected" : ""} onClick={() => setDraft((value) => ({ ...value, workload }))} key={workload}>{workload}</button>)}</fieldset>
+              <fieldset className="workload-field"><legend>Workload</legend>{["Light", "Balanced", "Heavy", "Extreme"].map((workload) => <button type="button" className={draft.workload === workload ? "selected" : ""} onClick={() => setDraft((value) => ({ ...value, workload }))} key={workload}>{workload}</button>)}</fieldset>
             </div>
           )}
 
           {step === 2 && (
             <div className="feedback-step">
               <div className="feedback-form">
-                <div className="step-intro"><h3>Give the next student context.</h3><p>What happened, when did it matter, and how did it affect learning?</p></div>
+                <div className="step-intro"><h3>Give the next student context.</h3><p>Describe the event, its timing and its effect on your learning.</p></div>
                 <label htmlFor="feedback">Your feedback</label>
-                <textarea id="feedback" value={draft.body} onChange={(event) => setDraft((value) => ({ ...value, body: event.target.value }))} placeholder="For example: Weekly worked examples made difficult topics easier to apply. Publishing the project rubric earlier would improve preparation…" />
+                <textarea id="feedback" value={draft.body} onChange={(event) => setDraft((value) => ({ ...value, body: event.target.value }))} placeholder="Weekly worked examples clarified difficult topics. An earlier project rubric would have helped me prepare." />
                 <div className="writing-meta"><span>{draft.body.length} characters</span><span>Minimum 70</span></div>
                 <div className="prompt-line"><strong>Useful details:</strong> assessment pace · feedback quality · class format · prerequisites</div>
               </div>
               <aside className="live-check">
                 <h3><ShieldCheck /> Live safety check</h3>
-                <p>Quick checks run here. The moderation council runs after submission.</p>
+                <p>We run these checks as you type. The agent council checks the full review after submission.</p>
                 {[
                   ["Threats", ["threat"]],
                   ["Personal attacks", ["attack"]],
@@ -312,21 +312,21 @@ export default function ReviewFlow({
                   const issue = analysis.issues.find(({ id }) => ids.includes(id));
                   return <div key={label} className={`check-row ${issue ? issue.severity : "clear"}`}>{issue ? <AlertTriangle /> : <Check />}<span><strong>{label}</strong><small>{issue?.message ?? "No issue detected"}</small></span></div>;
                 })}
-                <div className="moderation-explainer"><LockKeyhole /> No account is required and reviewers are not publicly identified. Infrastructure providers may still process security records.</div>
+                <div className="moderation-explainer"><LockKeyhole /> You do not need an account. Public pages hide reviewer identities. Cloudflare and Vercel may keep security records.</div>
               </aside>
             </div>
           )}
 
           {step === 3 && (
             <div className="check-step">
-              <div className="step-intro"><h3>Check the context, then send.</h3><p>Your review enters a trust queue before it affects public scores.</p></div>
+              <div className="step-intro"><h3>Check the context, then send.</h3><p>The Core screens your review before it changes public scores.</p></div>
               <div className="review-summary">
                 <dl><div><dt>Course</dt><dd>{selectedCourse?.code} · {selectedCourse?.name}</dd></div><div><dt>Lecturer</dt><dd>{selectedLecturer?.name}</dd></div><div><dt>Study period</dt><dd>{draft.semester} · {draft.year}</dd></div><div><dt>Ratings</dt><dd>Course {draft.courseRating}/5 · Lecturer {draft.lecturerRating}/5</dd></div></dl>
                 <blockquote>{draft.body}</blockquote>
               </div>
-              <div className="trust-queue"><ShieldCheck /><div><strong>Screened, logged and appealable</strong><p>Strong criticism stays allowed. The agents classify risk; the Core never declares an allegation true, defamatory or proof of guilt.</p></div></div>
-              {analysis.requiresHold && <div className="formal-report-warning"><AlertTriangle /><div><strong>This review will be held.</strong><p>KelasKita cannot investigate serious misconduct. Please also use your university’s integrity, student-support or security reporting channel.</p></div></div>}
-              {analysis.blockers.length > 0 && <div className="formal-report-warning"><AlertTriangle /><div><strong>This text is likely to be withheld.</strong><p>Remove threats, personal information, links and direct insults if you want the teaching feedback considered for publication.</p></div></div>}
+              <div className="trust-queue"><ShieldCheck /><div><strong>The Core records each decision</strong><p>Strong criticism can pass. Agents classify risk; they cannot verify facts, decide liability or find anyone guilty.</p></div></div>
+              {analysis.requiresHold && <div className="formal-report-warning"><AlertTriangle /><div><strong>The Core will hold this review.</strong><p>KelasKita cannot investigate serious misconduct. Send the claim to your university’s integrity, student-support or security office too.</p></div></div>}
+              {analysis.blockers.length > 0 && <div className="formal-report-warning"><AlertTriangle /><div><strong>These checks recommend withholding this text.</strong><p>Remove threats, personal information, links and direct insults so the Core can assess the teaching feedback.</p></div></div>}
               <Turnstile onToken={setTurnstileToken} resetKey={turnstileReset} />
               {publishError && <p className="publish-error"><AlertTriangle />{publishError}</p>}
             </div>
@@ -334,7 +334,7 @@ export default function ReviewFlow({
         </div>
 
         <footer className="review-footer">
-          <div className="privacy-note"><LockKeyhole /><span><strong>No account required.</strong> Reviewers are not publicly identified; automated decisions are recorded and can be appealed.</span></div>
+          <div className="privacy-note"><LockKeyhole /><span><strong>No account required.</strong> Public pages hide reviewer identities. We record automated decisions and accept appeals.</span></div>
           <div className="footer-buttons">
             <button className="button secondary" onClick={() => step ? setStep((value) => value - 1) : onClose()}>Back</button>
             {step < 3 ? <button className="button primary" disabled={!canContinue} onClick={() => setStep((value) => value + 1)}>Continue <ArrowRight /></button> : <button className="button primary" disabled={submitting || !turnstileToken} onClick={submit}>{submitting ? "Core is evaluating…" : turnstileToken ? "Submit for review" : "Complete anti-bot check"} <ArrowRight /></button>}

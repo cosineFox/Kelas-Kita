@@ -35,18 +35,18 @@ const setHeaders = (response, requestId) => {
 const publicError = (error) => {
   if (error instanceof HttpError) return error;
   if (error instanceof ConfigurationError) {
-    return new HttpError(503, error.code, "The service is not configured for submissions yet.");
+    return new HttpError(503, error.code, "The operator has not configured submissions.");
   }
   if (error instanceof ZodError) {
-    return new HttpError(400, "invalid_request", "Please check the submitted fields and try again.");
+    return new HttpError(400, "invalid_request", "Check the submitted fields and try again.");
   }
   if (error?.code === "23505") {
-    return new HttpError(409, "duplicate_submission", "A matching submission has already been received.");
+    return new HttpError(409, "duplicate_submission", "We already received a matching submission.");
   }
   if (error?.code === "23503") {
     return new HttpError(400, "invalid_reference", "The selected record is no longer available.");
   }
-  return new HttpError(500, "internal_error", "The service could not complete that request.");
+  return new HttpError(500, "internal_error", "The server could not finish that request.");
 };
 
 const diagnostic = (error) => ({

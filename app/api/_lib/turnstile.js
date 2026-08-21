@@ -28,13 +28,13 @@ export const verifyTurnstile = async (request, token) => {
     if (!response.ok) throw new Error(`siteverify ${response.status}`);
     result = await response.json();
   } catch {
-    throw new HttpError(403, "turnstile_failed", "The anti-bot check could not be verified.");
+    throw new HttpError(403, "turnstile_failed", "Turnstile could not verify the anti-bot check.");
   } finally {
     clearTimeout(timeout);
   }
 
   if (result.success !== true || result.action !== action) {
-    throw new HttpError(403, "turnstile_failed", "The anti-bot check could not be verified.");
+    throw new HttpError(403, "turnstile_failed", "Turnstile could not verify the anti-bot check.");
   }
 
   const allowedHosts = (process.env.TURNSTILE_HOSTNAMES ?? "")

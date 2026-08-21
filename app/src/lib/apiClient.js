@@ -8,7 +8,7 @@ const request = async (path, options = {}) => {
   const payload = isJson ? await response.json().catch(() => ({})) : {};
   if (!isJson) throw new Error("The server API is not connected.");
   if (!response.ok) {
-    const error = new Error(payload.error ?? "The service could not complete that request.");
+    const error = new Error(payload.error ?? "The server could not finish that request.");
     error.status = response.status;
     error.code = payload.code;
     throw error;

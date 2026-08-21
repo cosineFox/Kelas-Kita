@@ -12,7 +12,7 @@ const checks = [
     label: "Threats",
     severity: "block",
     test: (text) => /\b(?:i(?:'ll| will| am going to) (?:kill|hurt|attack)|you (?:should|deserve to) die|bomb (?:the|this)|shoot (?:him|her|them|you))\b/i.test(text),
-    message: "Threats cannot be submitted through KelasKita.",
+    message: "KelasKita rejects threats.",
   },
   {
     id: "attack",
@@ -33,14 +33,14 @@ const checks = [
     label: "Promotional links",
     severity: "block",
     test: (text) => /(?:https?:\/\/|www\.)/i.test(text),
-    message: "Links are not allowed in public reviews.",
+    message: "Remove links from public reviews.",
   },
   {
     id: "grave",
     label: "Serious allegation",
     severity: "hold",
     test: (text) => /\b(?:brib(?:e|ed|ery)|corrupt(?:ion)?|sexual(?:ly)? harass(?:ed|ment)?|assault(?:ed)?|rape(?:d)?|molest(?:ed|ation)?|blackmail(?:ed)?|falsif(?:y|ied) marks?|committed fraud|stole money)\b/i.test(text),
-    message: "This describes serious misconduct. It will be held for specialist review and should also be reported through the university's official channel.",
+    message: "The Core will hold this serious misconduct claim. Send it to the university's formal reporting channel too.",
   },
   {
     id: "flooding",
@@ -62,7 +62,7 @@ export const analyseFeedback = (text, previous = []) => {
       id: "duplicate",
       label: "Duplicate feedback",
       severity: "block",
-      message: "This is very similar to an existing review. Share your own experience.",
+      message: "This matches an existing review. Share your own experience.",
     });
   }
 

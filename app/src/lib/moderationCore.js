@@ -38,34 +38,34 @@ export const decideModeration = ({ kind = "review", analysis, agents = [], aiAva
   const grave = [...categories].some((category) => graveCategories.has(category));
 
   if (kind === "appeal") {
-    return result(kind, "escalate", "pending", reasons.length ? reasons : ["appeal_requested"], "The appeal is queued for a separate review. The original decision remains in place meanwhile.");
+    return result(kind, "escalate", "pending", reasons.length ? reasons : ["appeal_requested"], "We queued a separate appeal review and kept the original decision in place.");
   }
 
   if (kind === "reply") {
-    return result(kind, "escalate", "pending", ["identity_verification"], "The reply is pending verification and an independent moderation pass.");
+    return result(kind, "escalate", "pending", ["identity_verification"], "We will verify the reply's author and run a separate moderation check.");
   }
 
   if (urgent) {
     return kind === "report"
-      ? result(kind, "hide", "held", reasons, "The content is temporarily hidden because an urgent safety or privacy signal was detected.")
-      : result(kind, "reject", "rejected", reasons, "The submission cannot be published because it contains an urgent safety or privacy signal.");
+      ? result(kind, "hide", "held", reasons, "The Core hid the content after detecting an urgent safety or privacy signal.")
+      : result(kind, "reject", "rejected", reasons, "The Core withheld the submission after detecting an urgent safety or privacy signal.");
   }
 
   if (grave) {
-    return result(kind, "hold", "held", reasons, "The content is held because it contains a serious unverified allegation requiring specialist review.");
+    return result(kind, "hold", "held", reasons, "The Core held the serious unverified allegation for specialist review.");
   }
 
   if (categories.has("harassment") || categories.has("spam")) {
-    return result(kind, kind === "report" ? "escalate" : "hold", "held", reasons, "The content is held while manipulation or harassment signals are reviewed.");
+    return result(kind, kind === "report" ? "escalate" : "hold", "held", reasons, "The Core held the content for a review of manipulation or harassment signals.");
   }
 
   if (!aiAvailable) {
     return kind === "report"
-      ? result(kind, "escalate", "pending", ["agent_unavailable"], "No automatic takedown was made. The report is queued because the moderation agent was unavailable.")
-      : result(kind, "queue", "pending", ["agent_unavailable"], "The submission remains pending because the moderation agent was unavailable.");
+      ? result(kind, "escalate", "pending", ["agent_unavailable"], "The agent failed, so we queued the report without removing the content.")
+      : result(kind, "queue", "pending", ["agent_unavailable"], "The agent failed, so we kept the submission pending.");
   }
 
   return kind === "report"
-    ? result(kind, "no_action", "published", ["no_policy_breach_detected"], "The report did not identify an immediate policy breach. It remains recorded and can be appealed.")
-    : result(kind, "publish", "published", ["screened_low_risk"], "The automated checks found no policy reason to withhold the submission.");
+    ? result(kind, "no_action", "published", ["no_policy_breach_detected"], "The checks found no immediate policy breach. We recorded the report and accept an appeal.")
+    : result(kind, "publish", "published", ["screened_low_risk"], "The checks found no policy reason to withhold the submission.");
 };

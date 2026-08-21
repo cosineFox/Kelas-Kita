@@ -13,12 +13,12 @@ export const isSubmissionsOpen = () => process.env.SUBMISSIONS_OPEN === "true" &
 
 export const assertSubmissionsOpen = () => {
   if (!isSubmissionsOpen()) {
-    throw new HttpError(503, "submissions_closed", "Submissions are currently closed by the operator.");
+    throw new HttpError(503, "submissions_closed", "The operator has paused submissions.");
   }
 };
 
 export const assertCaseRoutesOpen = () => {
   if (!isLaunchApproved()) {
-    throw new HttpError(503, "case_routes_closed", "Reports and appeals require a configured operator contact.");
+    throw new HttpError(503, "case_routes_closed", "The operator must configure a contact address before accepting reports and appeals.");
   }
 };

@@ -16,7 +16,7 @@ const cookies = (request) => Object.fromEntries(
 export const verifyAdminSecret = (secret) => {
   const expected = requireEnv("ADMIN_SECRET");
   if (expected.length < 20 || !sameSecret(secret ?? "", expected)) {
-    throw new HttpError(401, "invalid_admin_secret", "The operator secret is not valid.");
+    throw new HttpError(401, "invalid_admin_secret", "Enter a valid operator secret.");
   }
 };
 
@@ -33,7 +33,7 @@ export const requireAdmin = (request) => {
   const token = cookies(request)[cookieName] ?? "";
   const [payload, signature] = token.split(".");
   if (!payload || !signature || !sameSecret(signature, sign(payload))) {
-    throw new HttpError(401, "admin_required", "Operator authentication is required.");
+    throw new HttpError(401, "admin_required", "Sign in as the operator.");
   }
 
   try {

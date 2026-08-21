@@ -48,7 +48,7 @@ export const appealInput = z.object({
 }).superRefine((value, context) => {
   if (value.reportId && value.reviewId) return;
   if (value.receipt) return;
-  context.addIssue({ code: "custom", message: "A moderation receipt or linked report is required." });
+  context.addIssue({ code: "custom", message: "Provide a moderation receipt or linked report." });
 });
 
 export const replyInput = z.object({

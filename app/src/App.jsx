@@ -24,7 +24,7 @@ const normalisePublicState = (value = {}) => ({
   reviews: Array.isArray(value.reviews) ? value.reviews : [],
 });
 
-const message = (error) => error?.message ?? "The service is temporarily unavailable.";
+const message = (error) => error?.message ?? "The service is unavailable.";
 
 export default function App() {
   const [data, setData] = useState(emptyState);

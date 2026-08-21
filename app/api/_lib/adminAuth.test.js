@@ -12,5 +12,5 @@ test("creates a signed, http-only operator session", () => {
   assert.match(header, /HttpOnly/);
   assert.match(header, /SameSite=Strict/);
   assert.doesNotThrow(() => requireAdmin({ headers: { cookie: header.split(";")[0] } }));
-  assert.throws(() => requireAdmin({ headers: { cookie: "kk_admin_session=forged" } }), /authentication/i);
+  assert.throws(() => requireAdmin({ headers: { cookie: "kk_admin_session=forged" } }), /sign in/i);
 });

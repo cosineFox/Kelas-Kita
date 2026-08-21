@@ -49,7 +49,7 @@ function Login({ onAuthenticated }) {
         <LockKeyhole />
         <span className="eyebrow">Private operator surface</span>
         <h1>Moderation console</h1>
-        <p>Public reviewers never log in. This private queue is only for unusual cases and operator overrides.</p>
+        <p>Reviewers use no public account. Operators use this queue for exceptions and overrides.</p>
         <label>Operator secret<input type="password" autoComplete="current-password" value={secret} onChange={(event) => setSecret(event.target.value)} /></label>
         {error && <p className="publish-error"><AlertTriangle /> {error}</p>}
         <button className="button primary" disabled={submitting || secret.length < 20}>{submitting ? "Checking…" : "Open queue"}</button>
@@ -130,7 +130,7 @@ export default function ModerationDashboard() {
     }
   };
 
-  if (authenticated === null) return <main className="moderation-loading"><ShieldAlert /> Verifying operator session…</main>;
+  if (authenticated === null) return <main className="moderation-loading"><ShieldAlert /> Checking operator session…</main>;
   if (!authenticated) return <Login onAuthenticated={() => { setAuthenticated(true); load(); }} />;
 
   const configReady = health && Object.values(health.configuration).every(Boolean);
@@ -157,7 +157,7 @@ export default function ModerationDashboard() {
       <div className="moderation-workspace">
         <aside className="case-list">
           <header><h1>Queue</h1><span>{cases.length} open</span></header>
-          {!cases.length && <div className="queue-empty"><Check /><strong>Queue clear</strong><small>No human decision is waiting.</small></div>}
+          {!cases.length && <div className="queue-empty"><Check /><strong>Queue clear</strong><small>The queue has no cases.</small></div>}
           {cases.map((item) => (
             <button key={`${item.kind}-${item.targetId}`} className={`${selectedId === item.targetId ? "selected" : ""} ${item.urgent ? "urgent" : ""}`} onClick={() => { setSelectedId(item.targetId); setReason(""); }}>
               <span>{item.kind}</span><strong>{item.courseCode} · {item.lecturerName}</strong>

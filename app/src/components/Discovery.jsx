@@ -18,7 +18,7 @@ import { publishedReviews, summariseCourse } from "../lib/reviews";
 const RatingBlock = ({ distribution, label, value, count }) => (
   <div className="rating-block" aria-label={count ? `${label} rating ${value.toFixed(1)} out of 5` : `${label} not yet rated`}>
     <span>{label}</span>
-    <strong><i>[</i>{count ? value.toFixed(1) : "—"}<i>]</i></strong>
+    <strong><i>[</i>{count ? value.toFixed(1) : "N/A"}<i>]</i></strong>
     <div className="rating-bars" aria-hidden="true">
       {distribution.map((width, index) => <span key={5 - index}><small>{5 - index}</small><i><b style={{ width: `${width}%` }} /></i></span>)}
     </div>
@@ -108,18 +108,18 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
             <ShieldCheck aria-hidden="true" />
           </button>
           <button className="button primary" disabled={!submissionsOpen} onClick={onReview}><PenLine /> Drop a review</button>
-          <span className="no-account">{submissionsOpen ? "posting is open" : "posting is paused"}</span>
+          <span className="no-account">{submissionsOpen ? "posting open" : "operator paused posting"}</span>
         </div>
       </header>
 
       <main id="top">
-        {serviceError && <div className="service-status" role="status"><ShieldCheck /><span><strong>The doors are still locked.</strong> {serviceError} No records are being kept in this browser.</span></div>}
-        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>Look, don’t touch mode.</strong> The operator has paused new submissions.</span></div>}
+        {serviceError && <div className="service-status" role="status"><ShieldCheck /><span><strong>The site cannot reach its API.</strong> {serviceError} We do not keep records in this browser.</span></div>}
+        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>Read-only mode.</strong> The operator has paused new submissions.</span></div>}
         <section className="hero">
           <div className="hero-copy">
             <span className="hero-sticker">student lore, now peer reviewed*</span>
             <h1>Pick a class.<br />Dodge a <span>character arc.</span></h1>
-            <p>Course reviews, workload warnings, and teaching lore—moderated by robots on a very short leash.</p>
+            <p>Course reviews, workload warnings and teaching lore. Robots moderate them on a short leash.</p>
             <label className="search-box">
               <Search aria-hidden="true" />
               <span className="sr-only">Search courses, lecturers, or universities</span>
@@ -148,8 +148,8 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
 
           <div className="results">
             <div className="results-heading">
-              <div><h2>{query ? "Things matching that" : courses.length ? "Currently causing discourse" : "The class pile"}</h2></div>
-              <label>Sort by:<select><option>Most reviews</option><option>Highest rated</option><option>Recently reviewed</option></select></label>
+              <div><h2>{query ? "Search results" : courses.length ? "Course board" : "The class pile"}</h2></div>
+              <label>Sort by:<select><option>Most reviews</option><option>Highest rated</option><option>Latest reviews</option></select></label>
             </div>
             <div className="course-list">
               {filtered.length ? filtered.slice(0, query ? 6 : 3).map((course) => (
@@ -163,20 +163,20 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
               )) : (
                 <div className="empty-state">
                   <div className="empty-pin-grid" aria-hidden="true">{Array.from({ length: 6 }, (_, index) => <span key={index} />)}</div>
-                  <div className="empty-copy"><Search /><h3>{loading ? "Shuffling the paperwork" : query ? "Nothing. Suspicious." : "Nothing pinned yet"}</h3><p>{loading ? "Fetching the public catalogue and published reviews…" : submissionsOpen ? "Pin a course with a pending review and future students can find it here." : "Zero courses, zero fake activity. New pins appear when submissions reopen."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add it in a review" : "Pin the first course"}</button>}</div>
+                  <div className="empty-copy"><Search /><h3>{loading ? "Loading courses" : query ? "No matches" : "Nothing pinned yet"}</h3><p>{loading ? "KelasKita is fetching the course list and published reviews." : submissionsOpen ? "Add a course with your review. Students can find it after the Core publishes it." : "No courses yet. New pins appear when the operator reopens submissions."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add this course" : "Pin the first course"}</button>}</div>
                 </div>
               )}
             </div>
             <div className="moderation-banner">
               <Bot />
-              <span>Every review waits backstage. Tiny specialist robots flag trouble; boring fixed rules make the call.</span>
+              <span>We hold each review before publication. Four AI checks flag risks; the Core applies the published rules.</span>
               <button onClick={() => onTrust({ mode: "overview" })}>Inspect the robot basement</button>
             </div>
 
             <section className="recent-section">
               <div className="results-heading"><div><h2>Fresh from the group chat</h2></div></div>
-              <div className="recent-table" role="table" aria-label="Recently reviewed courses">
-                {!recent.length && <p className="recent-empty">Nobody has submitted the sacred paragraph yet.</p>}
+              <div className="recent-table" role="table" aria-label="Latest course reviews">
+                {!recent.length && <p className="recent-empty">No published reviews yet.</p>}
                 {recent.map((review) => {
                   const course = courses.find((item) => item.id === review.courseId);
                   const lecturer = lecturers.find((item) => item.id === review.lecturerId);

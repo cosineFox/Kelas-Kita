@@ -73,7 +73,7 @@ test("commits catalogue, pending review, queue and publication on the server", a
   assert.equal(pending.assignments.length, 0);
   assert.equal(pending.reviews.length, 0);
   const moderationTarget = await loadModerationTarget("review", created.review.id);
-  assert.match(moderationTarget.text, /Course: COMP2013 — Algorithms/);
+  assert.match(moderationTarget.text, /Course: COMP2013: Algorithms/);
   assert.match(moderationTarget.text, /Lecturer: Dr Aisha Rahman/);
 
   const job = await claimTargetJob("review", created.review.id);

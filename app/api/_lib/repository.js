@@ -193,7 +193,7 @@ export const loadModerationTarget = async (kind, targetId) => {
     return first(await sql`
       select r.id::text,
         concat_ws(E'\n',
-          'Course: ' || c.code::text || ' — ' || r.submitted_course_name::text,
+          'Course: ' || c.code::text || ': ' || r.submitted_course_name::text,
           'University: ' || u.name::text,
           'Faculty: ' || r.submitted_faculty_name::text,
           'Lecturer: ' || l.name::text,

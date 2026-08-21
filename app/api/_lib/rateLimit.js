@@ -18,7 +18,7 @@ export const enforceRateLimit = async (request, scope, limit, windowMs, now = Da
 
   if (!rows.length) {
     const retryAfter = Math.max(1, Math.ceil((bucketStart.getTime() + windowMs - now) / 1_000));
-    const error = new HttpError(429, "rate_limited", "Too many attempts. Please wait before trying again.");
+    const error = new HttpError(429, "rate_limited", "Too many attempts. Wait before trying again.");
     error.retryAfter = retryAfter;
     throw error;
   }

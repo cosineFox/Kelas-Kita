@@ -32,7 +32,7 @@ function Experiment() {
   return (
     <>
       <h2>An autonomous moderation experiment</h2>
-      <p className="trust-lead">KelasKita tests whether a small council of specialist AI roles and a fixed policy core can keep student feedback useful without publicly identifying reviewers or pretending to establish the truth.</p>
+      <p className="trust-lead">KelasKita runs four AI risk checks, then applies a fixed rule set. Public pages hide reviewer identities. The system cannot verify allegations.</p>
       <div className="core-map" aria-label="Moderation system architecture">
         <div className="agent-bank">
           <span><ShieldAlert /><strong>Safety</strong><small>Threats and harassment</small></span>
@@ -47,14 +47,14 @@ function Experiment() {
       </div>
       <div className="boundary-note">
         <AlertTriangle />
-        <div><strong>The boundary matters.</strong><p>The agents classify observable risk. They never decide that an allegation is true, fraudulent, defamatory, or that a person is guilty. Serious claims are held and directed towards formal university reporting channels.</p></div>
+        <div><strong>Agents classify risk signals.</strong><p>The system cannot verify facts, decide whether a statement is defamatory or find anyone guilty. The Core holds serious claims and directs reviewers to university reporting channels.</p></div>
       </div>
-      <h3>How decisions work</h3>
+      <h3>Decision process</h3>
       <ol className="policy-steps">
-        <li><span>01</span><p>Every submission is stored as pending. Pending and held ratings do not affect public scores.</p></li>
-        <li><span>02</span><p>Four specialist roles run in one moderation pass to keep cost and data sharing contained.</p></li>
-        <li><span>03</span><p>Fixed rules—not free-form model prose—choose the initial action. Urgent privacy and safety risks can be hidden automatically.</p></li>
-        <li><span>04</span><p>Every action receives reason codes, a private audit record, an appeal route and a human override.</p></li>
+        <li><span>01</span><p>We store each submission as pending. Pending and held ratings do not affect public scores.</p></li>
+        <li><span>02</span><p>Four AI roles inspect safety, privacy, allegations and spam in one pass.</p></li>
+        <li><span>03</span><p>The Core applies fixed policy rules to the results. It can hide urgent privacy and safety risks.</p></li>
+        <li><span>04</span><p>We record reason codes and a private audit trail. Reviewers can appeal; the operator can override the Core.</p></li>
       </ol>
     </>
   );
@@ -64,10 +64,10 @@ function Rules() {
   return (
     <>
       <h2>Community rules</h2>
-      <p className="trust-lead">Criticise the class and teaching plainly. Keep the account first-hand, specific and useful to the next student.</p>
+      <p className="trust-lead">Criticise the course and lecturer. Use first-hand details that help the next student.</p>
       <div className="rule-columns">
         <section><CircleCheck /><h3>Useful here</h3><ul><li>Teaching clarity and class format</li><li>Assessment design and feedback timing</li><li>Workload, prerequisites and learning value</li><li>Specific experiences stated as your perspective</li></ul></section>
-        <section><X /><h3>Not published</h3><ul><li>Threats, slurs or personal attacks</li><li>Phone numbers, addresses, identity numbers or private accounts</li><li>Impersonation, spam or coordinated ratings</li><li>Rumours presented as personal knowledge</li></ul></section>
+        <section><X /><h3>We block</h3><ul><li>Threats, slurs or personal attacks</li><li>Phone numbers, addresses, identity numbers or private accounts</li><li>Impersonation, spam or coordinated ratings</li><li>Rumours presented as personal knowledge</li></ul></section>
       </div>
       <div className="formal-channel"><Scale /><div><strong>Serious misconduct needs a formal channel.</strong><p>Crime, corruption, sexual misconduct and immediate safety concerns require investigators who can receive evidence and protect the people involved. Report them to your university’s integrity, student-support or security office as appropriate.</p></div></div>
     </>
@@ -79,16 +79,16 @@ function Privacy() {
   return (
     <>
       <h2>Privacy & retention</h2>
-      <p className="trust-lead">No account is required and reviewers are not publicly identified. That is not a promise of absolute anonymity.</p>
+      <p className="trust-lead">You do not need an account. Public pages hide reviewer identities. Cloudflare, Vercel or a lawful investigation may still reveal technical records.</p>
       <dl className="policy-list">
-        <div><dt>Moderation processing</dt><dd>Review and moderation-case text is sent through Vercel AI Gateway to the configured model for risk classification. Contact details entered for appeals or replies are not included in that model request.</dd></div>
-        <div><dt>Infrastructure records</dt><dd>Cloudflare and Vercel may process network and security logs. KelasKita’s application database should retain only rotating abuse-signal hashes, not raw IP addresses.</dd></div>
+        <div><dt>Moderation processing</dt><dd>KelasKita sends review and moderation-case text through Vercel AI Gateway to the configured model. The model receives no contact details from appeals or replies.</dd></div>
+        <div><dt>Infrastructure records</dt><dd>Cloudflare and Vercel may keep network and security logs. KelasKita stores rotating abuse-signal hashes instead of raw IP addresses.</dd></div>
         <div><dt>30 days</dt><dd>Rotating abuse hashes and short-lived anti-spam signals.</dd></div>
-        <div><dt>90 days</dt><dd>Rejected or withdrawn review text, allowing time for an appeal.</dd></div>
-        <div><dt>12 months</dt><dd>Closed report and appeal records, plus minimal moderation audit metadata. Private follow-up contacts are cleared when the case closes.</dd></div>
-        <div><dt>Until removal</dt><dd>Published reviews and replies remain available until removed under policy or the service closes.</dd></div>
+        <div><dt>90 days</dt><dd>We keep rejected or withdrawn review text so reviewers have time to appeal.</dd></div>
+        <div><dt>12 months</dt><dd>We keep closed report and appeal records with the moderation audit metadata. We delete private follow-up contacts when the case closes.</dd></div>
+        <div><dt>Until removal</dt><dd>We keep published reviews and replies until policy requires removal or the service closes.</dd></div>
       </dl>
-      <p className="small-print">A valid court or regulatory request may require disclosure of records that still exist. The operator will publish final provider, cross-border transfer and contact details before public launch.</p>
+      <p className="small-print">A court or regulator may require the operator to disclose records that still exist. Cloudflare, Vercel and the selected model provider may process data outside Malaysia.</p>
       {operator && <p className="small-print"><strong>Operator contact:</strong> <a href={`mailto:${operator}`}>{operator}</a></p>}
     </>
   );
@@ -102,9 +102,9 @@ function Terms() {
       <ol className="terms-list">
         <li><strong>Use your own experience.</strong><span>Do not submit rumours or claim to speak for another person.</span></li>
         <li><strong>You remain responsible for your words.</strong><span>Submission does not make KelasKita an official complaint or whistleblowing channel.</span></li>
-        <li><strong>You permit publication and moderation.</strong><span>Submitted content may be screened, held, edited only for redaction, contextualised through notes or removed under these rules.</span></li>
-        <li><strong>Decisions are experimental.</strong><span>Automated decisions may be wrong. Reports and appeals exist so they can be challenged.</span></li>
-        <li><strong>No university affiliation.</strong><span>KelasKita is independent and is not endorsed by, operated by or officially connected with any listed university.</span></li>
+        <li><strong>You permit publication and moderation.</strong><span>KelasKita may screen, hold, redact, annotate or remove your submission under these rules.</span></li>
+        <li><strong>AI can make mistakes.</strong><span>Use reports and appeals to challenge a decision.</span></li>
+        <li><strong>No university affiliation.</strong><span>No listed university operates or endorses KelasKita.</span></li>
       </ol>
     </>
   );
@@ -189,9 +189,9 @@ function CaseForm({ mode, context, courses, lecturers, reviews, onNavigate, onRe
   }
 
   const headings = {
-    report: ["Report or request a takedown", "The agent council evaluates the content and the policy core makes an initial, logged decision."],
-    appeal: ["Appeal a decision", "A separate review is queued. The original action stays in place until that review finishes."],
-    reply: ["Lecturer right of reply", "Replies are not published until the university connection is verified and the text passes an independent check."],
+    report: ["Report or request a takedown", "AI agents check the report. The Core records the first action and its reasons."],
+    appeal: ["Appeal a decision", "We queue a separate review and keep the first action in place until it finishes."],
+    reply: ["Lecturer right of reply", "We publish replies after we verify the university connection and screen the text."],
   };
 
   return (
@@ -200,17 +200,17 @@ function CaseForm({ mode, context, courses, lecturers, reviews, onNavigate, onRe
       <h2>{headings[mode][0]}</h2>
       <p className="trust-lead">{headings[mode][1]}</p>
       {mode !== "appeal" && !selectableReviews.length ? (
-        <div className="no-cases"><FileText /><strong>No review is available for this action yet.</strong><p>Only published, held or rejected reviews can be reported, appealed or answered.</p></div>
+        <div className="no-cases"><FileText /><strong>There are no eligible reviews.</strong><p>You can act on published, held or rejected reviews.</p></div>
       ) : (
         <form className="case-form" onSubmit={submit}>
           {mode !== "appeal" && <label>Review<select value={reviewId} onChange={(event) => setReviewId(event.target.value)}>{selectableReviews.map((item) => <option value={item.id} key={item.id}>{reviewLabel(item, courses, lecturers)}</option>)}</select></label>}
           {mode === "appeal" && !linkedReportAppeal && <label>Private moderation receipt<input required minLength={20} maxLength={128} value={receipt} onChange={(event) => setReceipt(event.target.value)} placeholder="Paste the receipt shown after submission" /></label>}
-          {linkedReportAppeal && <div className="urgent-note"><FileText /><span>This appeal is privately linked to the report you just submitted.</span></div>}
+          {linkedReportAppeal && <div className="urgent-note"><FileText /><span>We linked this appeal to the report you submitted.</span></div>}
           {mode === "report" && <label>Reason<select value={reason} onChange={(event) => setReason(event.target.value)}><option>Threat or immediate safety</option><option>Personal information or doxxing</option><option>Serious unverified allegation</option><option>Harassment or personal attack</option><option>Spam or manipulation</option><option>Other policy breach</option></select></label>}
           {mode === "reply" && <label>University email <span>kept private</span><input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@university.edu.my" /></label>}
-          {mode === "appeal" && <label>Contact email <span>optional and private</span><input type="email" value={contact} onChange={(event) => setContact(event.target.value)} placeholder="Only for follow-up on this appeal" /></label>}
-          <label>{mode === "reply" ? "Proposed reply" : mode === "appeal" ? "Why should the decision change?" : "What should the Core consider?"}<textarea required minLength={mode === "report" ? 20 : 70} maxLength={1500} value={mode === "reply" ? body : details} onChange={(event) => mode === "reply" ? setBody(event.target.value) : setDetails(event.target.value)} /></label>
-          {mode === "report" && <div className="urgent-note"><ShieldAlert /><span>Strong threat or personal-information signals can temporarily hide a review immediately. Other reports do not automatically remove criticism.</span></div>}
+          {mode === "appeal" && <label>Contact email <span>optional and private</span><input type="email" value={contact} onChange={(event) => setContact(event.target.value)} placeholder="Use this address for appeal follow-up" /></label>}
+          <label>{mode === "reply" ? "Proposed reply" : mode === "appeal" ? "Reason for changing the decision" : "Evidence and policy concern"}<textarea required minLength={mode === "report" ? 20 : 70} maxLength={1500} value={mode === "reply" ? body : details} onChange={(event) => mode === "reply" ? setBody(event.target.value) : setDetails(event.target.value)} /></label>
+          {mode === "report" && <div className="urgent-note"><ShieldAlert /><span>The Core can hide a review when it detects a strong threat or personal-information signal. Other reports enter the queue without removing the review.</span></div>}
           <Turnstile onToken={setTurnstileToken} resetKey={turnstileReset} />
           {error && <p className="publish-error"><AlertTriangle />{error}</p>}
           <button className="button primary" disabled={submitting || !turnstileToken || (mode !== "appeal" && !reviewId) || (mode === "appeal" && !linkedReportAppeal && !receipt)}>{submitting ? "Evaluating…" : !turnstileToken ? "Complete anti-bot check" : mode === "report" ? "Send to the Core" : mode === "appeal" ? "Submit appeal" : "Submit reply"}<ArrowRight /></button>
@@ -245,7 +245,7 @@ export default function TrustCentre({ context, courses, lecturers, reviews, onNa
         {context.mode === "overview" || !context.mode
           ? <Overview initialTab={context.tab} onNavigate={onNavigate} />
           : <CaseForm mode={context.mode} context={context} courses={courses} lecturers={lecturers} reviews={reviews} onNavigate={onNavigate} onReport={onReport} onAppeal={onAppeal} onReply={onReply} />}
-        <footer className="trust-footer"><span>No account required. Reviewers are not publicly identified.</span><strong>Independent and not affiliated with any listed university.</strong></footer>
+        <footer className="trust-footer"><span>No account required. Public pages hide reviewer identities.</span><strong>No listed university operates or endorses KelasKita.</strong></footer>
       </section>
     </div>
   );

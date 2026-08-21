@@ -35,7 +35,7 @@ test("verifies Turnstile through the canonical server endpoint", async () => {
     global.fetch = async () => ({ ok: true, json: async () => ({ success: false }) });
     await assert.rejects(
       verifyTurnstile({ headers: {} }, "rejected-token"),
-      /could not be verified/i,
+      /could not verify/i,
     );
   } finally {
     global.fetch = previousFetch;

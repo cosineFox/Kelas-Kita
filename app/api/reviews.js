@@ -11,7 +11,7 @@ const pendingDecision = {
   action: "queue",
   appealable: true,
   status: "pending",
-  summary: "The review remains private while the moderation queue retries.",
+  summary: "We kept the review private and queued another moderation attempt.",
   version: "core-0.1",
   model: null,
 };
