@@ -12,42 +12,42 @@ const checks = [
     label: "Threats",
     severity: "block",
     test: (text) => /\b(?:i(?:'ll| will| am going to) (?:kill|hurt|attack)|you (?:should|deserve to) die|bomb (?:the|this)|shoot (?:him|her|them|you))\b/i.test(text),
-    message: "KelasKita rejects threats.",
+    message: "Threat detected. Absolutely not.",
   },
   {
     id: "attack",
     label: "Personal attacks",
     severity: "block",
     test: (text) => /\b(idiot|moron|stupid|useless|pathetic|bitch|asshole|hate (him|her|them)|worst human)\b/i.test(text),
-    message: "Describe the teaching behaviour and its effect, without insulting the person.",
+    message: "Describe the teaching, not your personal beef with the human.",
   },
   {
     id: "pii",
     label: "Personal information",
     severity: "block",
     test: (text) => /(?:[\w.+-]+@[\w.-]+\.[a-z]{2,}|(?:\+?\d[\s().-]*){8,}|@[a-z0-9_]{3,}|\b\d{6}-?\d{2}-?\d{4}\b)/i.test(text),
-    message: "Remove email addresses, phone numbers, identity numbers, or social handles.",
+    message: "Doxxing is cringe. Remove emails, phone numbers, identity numbers and handles.",
   },
   {
     id: "links",
     label: "Promotional links",
     severity: "block",
     test: (text) => /(?:https?:\/\/|www\.)/i.test(text),
-    message: "Remove links from public reviews.",
+    message: "Links are not invited to this function. Remove them.",
   },
   {
     id: "grave",
     label: "Serious allegation",
     severity: "hold",
     test: (text) => /\b(?:brib(?:e|ed|ery)|corrupt(?:ion)?|sexual(?:ly)? harass(?:ed|ment)?|assault(?:ed)?|rape(?:d)?|molest(?:ed|ation)?|blackmail(?:ed)?|falsif(?:y|ied) marks?|committed fraud|stole money)\b/i.test(text),
-    message: "The Core will hold this serious misconduct claim. Send it to the university's formal reporting channel too.",
+    message: "Serious claim detected. The Core will hold it; report it through your university too.",
   },
   {
     id: "flooding",
     label: "Repeated or shouted text",
     severity: "warn",
     test: (text) => /(.)\1{5,}|\b(\w+)(?:\s+\1){3,}\b/i.test(text) || capsRatio(text) > 0.58,
-    message: "Use normal sentence case and remove repeated words or characters.",
+    message: "Lower the volume and remove repeated words or keyboard mashing.",
   },
 ];
 
@@ -62,7 +62,7 @@ export const analyseFeedback = (text, previous = []) => {
       id: "duplicate",
       label: "Duplicate feedback",
       severity: "block",
-      message: "This matches an existing review. Share your own experience.",
+      message: "Copy-paste aura detected. Share your own experience.",
     });
   }
 
@@ -71,7 +71,7 @@ export const analyseFeedback = (text, previous = []) => {
       id: "specificity",
       label: "Needs more context",
       severity: "warn",
-      message: "Mention what happened, when it mattered, and how it affected learning.",
+      message: "More lore required: what happened, when it mattered and how it affected learning.",
     });
   }
 

@@ -6,9 +6,9 @@ const request = async (path, options = {}) => {
   });
   const isJson = response.headers.get("content-type")?.includes("application/json");
   const payload = isJson ? await response.json().catch(() => ({})) : {};
-  if (!isJson) throw new Error("The server API is not connected.");
+  if (!isJson) throw new Error("The backend is not connected.");
   if (!response.ok) {
-    const error = new Error(payload.error ?? "The server could not finish that request.");
+    const error = new Error(payload.error ?? "The server fumbled that request.");
     error.status = response.status;
     error.code = payload.code;
     throw error;

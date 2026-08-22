@@ -53,5 +53,5 @@ export default function Turnstile({ onToken, resetKey = 0 }) {
     };
   }, [onToken, resetKey]);
 
-  return <div className="turnstile-slot"><div ref={container} className="cf-turnstile" data-sitekey={siteKey} data-action={action} /><small>Cloudflare Turnstile protects this form</small></div>;
+  return <div className="turnstile-slot"><div ref={container} className="cf-turnstile" data-sitekey={siteKey} data-action={action} /><small>Cloudflare checks that you are not a bot-shaped opp</small></div>;
 }

@@ -73,10 +73,7 @@ svg { width: 1.15em; height: 1.15em; stroke-width: 1.8; }
 .button.secondary { color: var(--ink); background: #fff; }
 .button.primary:hover:not(:disabled) { background: #e94027; border-color: #e94027; }
 .button.secondary:hover:not(:disabled) { background: var(--blue); }
-.profile-button, .icon-button { border: 0; background: transparent; display: grid; place-items: center; }
-.profile-button { grid-template-columns: 34px 14px; gap: 4px; }
-.profile-button > svg:first-child { width: 34px; height: 34px; padding: 7px; border: 1px solid var(--ink); border-radius: 50%; }
-.profile-button > svg:last-child { width: 13px; }
+.icon-button { border: 0; background: transparent; display: grid; place-items: center; }
 
 .hero { min-height: 225px; display: grid; align-items: center; padding: 28px max(34px, calc((100vw - 940px) / 2)) 32px; border-bottom: 1px solid var(--line); overflow: hidden; }
 .hero h1 { margin: 0; font: 700 clamp(40px, 4.3vw, 55px)/1.04 var(--display); letter-spacing: -.045em; }
@@ -89,28 +86,16 @@ svg { width: 1.15em; height: 1.15em; stroke-width: 1.8; }
 .search-box input::placeholder { color: #7c879c; }
 .search-box kbd { color: var(--muted); white-space: nowrap; font: 12px inherit; }
 
-.explore-layout { display: grid; grid-template-columns: 278px minmax(0, 1fr); max-width: 1536px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
-.filters { padding: 24px 26px 36px; border-right: 1px solid var(--line); background: rgba(255,255,255,.8); }
-.filters-title { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 9px; margin-bottom: 24px; }
-.filters-title h2 { margin: 0; font-size: 21px; }
-.filters-title button { padding: 0; border: 0; background: transparent; color: #175ac8; font-size: 12px; text-decoration: underline; }
-.filters > label, .filters fieldset { display: grid; gap: 8px; margin: 0 0 22px; padding: 0; border: 0; font-size: 13px; font-weight: 750; }
-.filters select, .results-heading select { height: 42px; border: 1px solid var(--line); border-radius: 6px; background: #fff; padding: 0 11px; font-size: 13px; }
-.filters legend { margin-bottom: 10px; }
-.filters fieldset label { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 500; }
-.filters input { width: 16px; height: 16px; accent-color: var(--ink); }
+.explore-layout { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 1536px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
 .results { min-width: 0; background: rgba(255,255,255,.86); }
 .results-heading { min-height: 65px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); }
 .results-heading > div { display: flex; align-items: center; gap: 12px; }
 .results-heading h2 { margin: 0; font-size: 21px; letter-spacing: -.025em; }
-.results-heading label { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-.results-heading select { height: 34px; border: 0; font-weight: 650; }
 .course-row { position: relative; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.74); }
 .course-row.is-active { background: var(--blue); }
-.row-main { width: calc(100% - 50px); min-height: 144px; padding: 18px 20px 18px 28px; display: grid; grid-template-columns: minmax(250px, 1.05fr) minmax(280px, .9fr) minmax(200px, .72fr); align-items: stretch; gap: 0; border: 0; background: transparent; text-align: left; }
+.row-main { width: 100%; min-height: 144px; padding: 18px 20px 18px 28px; display: grid; grid-template-columns: minmax(250px, 1.05fr) minmax(280px, .9fr) minmax(200px, .72fr); align-items: stretch; gap: 0; border: 0; background: transparent; text-align: left; }
 .course-title, .rating-pair, .lecturer-quote { min-width: 0; }
 .course-title { position: relative; padding: 0 18px 0 34px; }
-.course-glyph { position: absolute; left: 0; top: 2px; width: 20px; height: 20px; }
 .course-code { color: var(--muted); font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .07em; }
 .course-title h3 { margin: 5px 0 5px; font: 700 22px/1.15 var(--display); letter-spacing: -.025em; }
 .course-title p { margin: 0; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -132,7 +117,6 @@ svg { width: 1.15em; height: 1.15em; stroke-width: 1.8; }
 .lecturer-quote strong { font-size: 13px; }
 .lecturer-quote p { position: relative; margin: 11px 0 0; color: #34405c; font: italic 12px/1.55 Georgia, serif; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 .lecturer-quote p svg { float: left; margin: 1px 8px 0 0; color: var(--coral); fill: var(--coral); width: 14px; }
-.bookmark-btn { position: absolute; top: 18px; right: 16px; width: 32px; height: 32px; display: grid; place-items: center; border: 0; background: transparent; }
 .row-detail { min-height: 43px; padding: 0 67px 0 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-top: 1px dashed var(--line); color: #46536d; font-size: 12px; animation: detail-in .28s var(--ease); }
 .row-detail button { border: 0; background: transparent; color: #175ac8; font-weight: 750; }
 @keyframes detail-in { from { opacity: 0; transform: translateY(-5px); } }
@@ -279,7 +263,6 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
 .publish-error { display: flex; align-items: center; gap: 8px; color: #a13525; font-size: 12px; }
 .turnstile-slot { min-height: 44px; margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--soft-line); padding-top: 12px; }
 .turnstile-slot small { color: var(--muted); font-size: 9px; }
-.turnstile-error { color: #a13525; font-size: 11px; }
 .review-footer { flex: 0 0 auto; min-height: 86px; padding: 14px 52px 14px 58px; border-top: 1px solid var(--ink); display: flex; align-items: center; justify-content: space-between; gap: 24px; background: rgba(255,255,255,.96); }
 .privacy-note { max-width: 480px; display: flex; align-items: flex-start; gap: 9px; color: var(--muted); font: italic 10px/1.45 Georgia, serif; }
 .privacy-note svg { flex: 0 0 auto; }
@@ -562,29 +545,15 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
 .search-box input::placeholder { color: #6b665a; }
 
 .explore-layout {
-  grid-template-columns: 295px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   width: min(1536px, calc(100% - 42px));
   margin: 28px auto 40px;
   border: 2px solid var(--ink);
   box-shadow: 9px 9px 0 var(--ink);
 }
-.filters { padding: 26px 24px 36px; border-right: 2px solid var(--ink); background: #ffd1c6; }
-.filters-title { grid-template-columns: 24px 1fr auto; margin-bottom: 26px; }
-.filters-title h2, .results-heading h2 { font: 400 25px/1 var(--display); letter-spacing: .01em; text-transform: uppercase; }
-.filters-title button { color: var(--ink); font-weight: 800; }
-.filters > label, .filters fieldset { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
-.filters fieldset label { font-size: 11px; text-transform: none; letter-spacing: 0; }
-.filters select, .results-heading select {
-  border: 2px solid var(--ink);
-  border-radius: 0;
-  background: #fffdf5;
-  font-weight: 750;
-}
-.filters input { accent-color: var(--coral); }
+.results-heading h2 { font: 400 25px/1 var(--display); letter-spacing: .01em; text-transform: uppercase; }
 .results { background: rgba(243,239,223,.88); }
 .results-heading { min-height: 70px; padding: 0 24px; border-bottom: 2px solid var(--ink); }
-.results-heading label { font-size: 9px; font-weight: 800; text-transform: uppercase; }
-.results-heading select { background: transparent; border: 0; }
 .course-list {
   min-height: 430px;
   padding: 38px 34px 46px;
@@ -627,14 +596,12 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   gap: 18px;
 }
 .course-title { padding: 0; }
-.course-glyph { display: none; }
 .course-code { width: max-content; padding: 3px 6px; background: var(--acid); color: var(--ink); }
 .course-title h3 { font: 400 27px/1 var(--display); letter-spacing: .01em; text-transform: uppercase; }
 .rating-pair { padding: 15px 0; border: 2px dashed var(--ink); border-right: 0; border-left: 0; }
 .rating-block strong { font-family: var(--display); font-weight: 400; }
 .lecturer-quote { padding: 0; }
 .lecturer-quote p, .recent-empty { font-family: var(--scribble); font-style: normal; }
-.bookmark-btn { top: 16px; right: 13px; }
 .row-detail { min-height: 54px; padding: 10px 18px; border-top: 2px dashed var(--ink); color: var(--ink); }
 .moderation-banner {
   min-height: 54px;
@@ -747,22 +714,15 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   .mobile-trust-button { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--ink); border-radius: 8px; background: #fff; }
   .wordmark { font-size: 19px; }
   .logo-mark { width: 34px; }
-  .profile-button { display: none; }
   .hero { min-height: 280px; padding: 40px 22px; }
   .hero h1 { font-size: clamp(42px, 12vw, 58px); }
   .hero p { font-size: 14px; line-height: 1.5; }
   .hero-sticker { margin-left: 0; }
   .explore-layout { width: 100%; grid-template-columns: 1fr; margin: 0; border: 0; box-shadow: none; }
-  .filters { padding: 14px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 0; border-bottom: 1px solid var(--line); }
-  .filters-title { grid-column: 1 / -1; margin: 0; }
-  .filters > label { margin: 0; }
-  .filters fieldset { display: none; }
   .results-heading { padding: 0 18px; }
-  .results-heading label { display: none; }
   .course-list { padding: 32px 22px 40px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
   .row-main { width: 100%; grid-template-columns: 1fr; gap: 17px; padding: 30px 20px 20px; }
   .rating-pair { padding: 16px 0; border: 2px dashed var(--ink); border-right: 0; border-left: 0; }
-  .bookmark-btn { right: 10px; }
   .empty-pin-grid { grid-template-columns: repeat(2, 1fr); }
   .recent-row { grid-template-columns: 1fr auto; }
   .recent-row p { grid-column: 1 / -1; }

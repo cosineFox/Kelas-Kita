@@ -15,7 +15,7 @@ export const summariseCourse = (course, reviews) => {
 
   return {
     ...course,
-    excerpt: accepted[0]?.body ?? "Be the first to add useful context for this class.",
+    excerpt: accepted[0]?.body ?? "Nobody has dropped the lore for this class yet.",
     workload: accepted[0]?.workload ?? "Not rated",
     ratings: {
       course: average("courseRating"),

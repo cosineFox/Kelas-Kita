@@ -21,24 +21,24 @@ export default function TermsGate({ open, onAccept, onReadTerms }) {
   return (
     <section className="terms-gate" role="dialog" aria-modal="true" aria-labelledby="terms-gate-title">
       <div className="terms-card">
-        <header><FileText /><span>TERMS · {termsVersion}</span></header>
+        <header><FileText /><span>KINDA IMPORTANT · {termsVersion}</span></header>
         <div className="terms-copy">
-          <p className="terms-kicker">Before you post</p>
-          <h1 id="terms-gate-title">Read this first.</h1>
-          <p>Write about your own experience. Leave out threats, personal information, rumours and allegations of serious misconduct.</p>
+          <p className="terms-kicker">One sec before the yapping</p>
+          <h1 id="terms-gate-title">Don't make this weird.</h1>
+          <p>Write about your own experience. Leave out threats, personal information, rumours and serious misconduct allegations.</p>
           <label className="terms-consent">
             <input type="checkbox" checked={checked} onChange={(event) => setChecked(event.target.checked)} autoFocus />
-            <span>I am 18 or older and agree to the Community Rules, Terms and Privacy Notice.</span>
+            <span>I am 18 or older and agree to the rules, actual terms and privacy notice.</span>
           </label>
         </div>
         <footer>
-          <button type="button" className="terms-read" onClick={onReadTerms}>Read the terms</button>
+          <button type="button" className="terms-read" onClick={onReadTerms}>Show me the legal text</button>
           <button
             type="button"
             className="terms-accept"
             disabled={!checked}
             onClick={() => { rememberAcceptance(); onAccept(); }}
-          >Agree and enter</button>
+          >I agree. Let me in</button>
         </footer>
       </div>
     </section>

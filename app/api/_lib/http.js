@@ -12,12 +12,12 @@ export class HttpError extends Error {
 
 export const readJson = (request) => {
   const length = Number(request.headers["content-length"] ?? 0);
-  if (length > 24_000) throw new HttpError(413, "payload_too_large", "That submission is too large.");
+  if (length > 24_000) throw new HttpError(413, "payload_too_large", "That yap is doing too much. Shorten it.");
 
   try {
     return typeof request.body === "string" ? JSON.parse(request.body) : request.body ?? {};
   } catch {
-    throw new HttpError(400, "invalid_json", "The request body is not valid JSON.");
+    throw new HttpError(400, "invalid_json", "That request arrived mangled.");
   }
 };
 
@@ -35,18 +35,18 @@ const setHeaders = (response, requestId) => {
 const publicError = (error) => {
   if (error instanceof HttpError) return error;
   if (error instanceof ConfigurationError) {
-    return new HttpError(503, error.code, "The operator has not configured submissions.");
+    return new HttpError(503, error.code, "The operator has not finished setting up submissions.");
   }
   if (error instanceof ZodError) {
-    return new HttpError(400, "invalid_request", "Check the submitted fields and try again.");
+    return new HttpError(400, "invalid_request", "Some fields failed the vibe check. Fix them and try again.");
   }
   if (error?.code === "23505") {
-    return new HttpError(409, "duplicate_submission", "We already received a matching submission.");
+    return new HttpError(409, "duplicate_submission", "Duplicate jumpscare: we already received this submission.");
   }
   if (error?.code === "23503") {
     return new HttpError(400, "invalid_reference", "We cannot find the selected record.");
   }
-  return new HttpError(500, "internal_error", "The server could not finish that request.");
+  return new HttpError(500, "internal_error", "The server fumbled that request.");
 };
 
 const diagnostic = (error) => ({

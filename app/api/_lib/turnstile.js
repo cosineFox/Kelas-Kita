@@ -7,7 +7,7 @@ const action = "turnstile-spin-v2";
 
 export const verifyTurnstile = async (request, token) => {
   if (!token || token.length > 2_048) {
-    throw new HttpError(400, "turnstile_required", "Complete the anti-bot check before submitting.");
+    throw new HttpError(400, "turnstile_required", "Prove you are not a bot-shaped opp before submitting.");
   }
 
   const controller = new AbortController();
@@ -28,13 +28,13 @@ export const verifyTurnstile = async (request, token) => {
     if (!response.ok) throw new Error(`siteverify ${response.status}`);
     result = await response.json();
   } catch {
-    throw new HttpError(403, "turnstile_failed", "Turnstile could not verify the anti-bot check.");
+    throw new HttpError(403, "turnstile_failed", "Turnstile could not verify the vibe check. Try again.");
   } finally {
     clearTimeout(timeout);
   }
 
   if (result.success !== true || result.action !== action) {
-    throw new HttpError(403, "turnstile_failed", "Turnstile could not verify the anti-bot check.");
+    throw new HttpError(403, "turnstile_failed", "Turnstile could not verify the vibe check. Try again.");
   }
 
   const allowedHosts = (process.env.TURNSTILE_HOSTNAMES ?? "")

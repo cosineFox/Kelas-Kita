@@ -19,7 +19,7 @@ export default endpoint(["POST"], async (request, response) => {
     action: "escalate",
     appealable: true,
     status: "pending",
-    summary: "We queued your report.",
+    summary: "Snitch report queued.",
     version: "core-0.1",
     model: null,
   };
