@@ -99,34 +99,34 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
           <span className="logo-mark">KK</span><span>KelasKita</span>
         </a>
         <nav aria-label="Primary navigation">
-          <a className="active" href="#explore">The class pile</a>
+          <a className="active" href="#explore">Courses</a>
           <button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Community rules</button>
-          <button onClick={() => onTrust({ mode: "overview" })}>Boring but important</button>
+          <button onClick={() => onTrust({ mode: "overview" })}>How moderation works</button>
         </nav>
         <div className="header-actions">
           <button className="mobile-trust-button" onClick={() => onTrust({ mode: "overview" })} aria-label="Trust centre">
             <ShieldCheck aria-hidden="true" />
           </button>
-          <button className="button primary" disabled={!submissionsOpen} onClick={onReview}><PenLine /> Drop a review</button>
-          <span className="no-account">{submissionsOpen ? "posting open" : "operator paused posting"}</span>
+          <button className="button primary" disabled={!submissionsOpen} onClick={onReview}><PenLine /> Write a review</button>
+          <span className="no-account">{submissionsOpen ? "submissions open" : "submissions paused"}</span>
         </div>
       </header>
 
       <main id="top">
-        {serviceError && <div className="service-status" role="status"><ShieldCheck /><span><strong>The site cannot reach its API.</strong> {serviceError} We do not keep records in this browser.</span></div>}
-        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>Read-only mode.</strong> The operator has paused new submissions.</span></div>}
+        {serviceError && <div className="service-status" role="status"><ShieldCheck /><span><strong>The API is offline.</strong> {serviceError} This browser cannot save submissions.</span></div>}
+        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>Submissions paused.</strong> The operator has closed the form.</span></div>}
         <section className="hero">
           <div className="hero-copy">
-            <span className="hero-sticker">student lore, now peer reviewed*</span>
-            <h1>Pick a class.<br />Dodge a <span>character arc.</span></h1>
-            <p>Course reviews, workload warnings and teaching lore. Robots moderate them on a short leash.</p>
+            <span className="hero-sticker">reviews from students who took the class</span>
+            <h1>Pick a class<br /><span>without the character arc.</span></h1>
+            <p>Read about workload, teaching and assessment before you enrol.</p>
             <label className="search-box">
               <Search aria-hidden="true" />
               <span className="sr-only">Search courses, lecturers, or universities</span>
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Consult the rumour mill…"
+                placeholder="Search courses or lecturers"
               />
               {query && <kbd>{filtered.length} found</kbd>}
             </label>
@@ -135,7 +135,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
 
         <section className="explore-layout" id="explore">
           <aside className="filters" aria-label="Course filters">
-            <div className="filters-title"><SlidersHorizontal /><h2>Narrow the chaos</h2><button>Reset</button></div>
+            <div className="filters-title"><SlidersHorizontal /><h2>Filter courses</h2><button>Reset</button></div>
             <label>University<select><option>All universities</option></select></label>
             <label>Faculty<select><option>Engineering</option><option>All faculties</option></select></label>
             <fieldset>
@@ -148,7 +148,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
 
           <div className="results">
             <div className="results-heading">
-              <div><h2>{query ? "Search results" : courses.length ? "Course board" : "The class pile"}</h2></div>
+              <div><h2>{query ? "Search results" : "Courses"}</h2></div>
               <label>Sort by:<select><option>Most reviews</option><option>Highest rated</option><option>Latest reviews</option></select></label>
             </div>
             <div className="course-list">
@@ -163,18 +163,18 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
               )) : (
                 <div className="empty-state">
                   <div className="empty-pin-grid" aria-hidden="true">{Array.from({ length: 6 }, (_, index) => <span key={index} />)}</div>
-                  <div className="empty-copy"><Search /><h3>{loading ? "Loading courses" : query ? "No matches" : "Nothing pinned yet"}</h3><p>{loading ? "KelasKita is fetching the course list and published reviews." : submissionsOpen ? "Add a course with your review. Students can find it after the Core publishes it." : "No courses yet. New pins appear when the operator reopens submissions."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add this course" : "Pin the first course"}</button>}</div>
+                  <div className="empty-copy"><Search /><h3>{loading ? "Loading courses" : query ? "No matching courses" : "No courses yet"}</h3><p>{loading ? "We are loading courses and published reviews." : submissionsOpen ? "Add a course when you write a review. We list it after publication." : "The operator has paused new submissions."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add this course" : "Write the first review"}</button>}</div>
                 </div>
               )}
             </div>
             <div className="moderation-banner">
               <Bot />
-              <span>We hold each review before publication. Four AI checks flag risks; the Core applies the published rules.</span>
-              <button onClick={() => onTrust({ mode: "overview" })}>Inspect the robot basement</button>
+              <span>Qwen checks submissions for threats, personal data, serious allegations and spam. The Core applies the published rules.</span>
+              <button onClick={() => onTrust({ mode: "overview" })}>View moderation rules</button>
             </div>
 
             <section className="recent-section">
-              <div className="results-heading"><div><h2>Fresh from the group chat</h2></div></div>
+              <div className="results-heading"><div><h2>Latest reviews</h2></div></div>
               <div className="recent-table" role="table" aria-label="Latest course reviews">
                 {!recent.length && <p className="recent-empty">No published reviews yet.</p>}
                 {recent.map((review) => {
@@ -196,7 +196,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
         </section>
       </main>
 
-      <footer><span>© 2026 KelasKita · Student-built, robot-supervised, not affiliated with any listed university.</span><nav><button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Rules</button><button onClick={() => onTrust({ mode: "overview", tab: "privacy" })}>Privacy</button><button onClick={() => onTrust({ mode: "overview", tab: "terms" })}>Legal-ish</button><a href="#top">Beam me up</a></nav></footer>
+      <footer><span>© 2026 KelasKita · No listed university operates or endorses this site.</span><nav><button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Rules</button><button onClick={() => onTrust({ mode: "overview", tab: "privacy" })}>Privacy</button><button onClick={() => onTrust({ mode: "overview", tab: "terms" })}>Terms</button><a href="#top">Back to top</a></nav></footer>
     </div>
   );
 }

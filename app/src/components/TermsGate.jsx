@@ -21,11 +21,11 @@ export default function TermsGate({ open, onAccept, onReadTerms }) {
   return (
     <section className="terms-gate" role="dialog" aria-modal="true" aria-labelledby="terms-gate-title">
       <div className="terms-card">
-        <header><FileText /><span>TERMS CHECK · {termsVersion}</span></header>
+        <header><FileText /><span>TERMS · {termsVersion}</span></header>
         <div className="terms-copy">
-          <p className="terms-kicker">Before you join the class pile</p>
-          <h1 id="terms-gate-title">Keep it first-hand.</h1>
-          <p>Review teaching and courses from your own experience. Do not post threats, personal information, rumours or grave allegations.</p>
+          <p className="terms-kicker">Before you post</p>
+          <h1 id="terms-gate-title">Read this first.</h1>
+          <p>Write about your own experience. Leave out threats, personal information, rumours and allegations of serious misconduct.</p>
           <label className="terms-consent">
             <input type="checkbox" checked={checked} onChange={(event) => setChecked(event.target.checked)} autoFocus />
             <span>I am 18 or older and agree to the Community Rules, Terms and Privacy Notice.</span>

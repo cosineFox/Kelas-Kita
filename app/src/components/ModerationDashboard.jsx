@@ -47,9 +47,9 @@ function Login({ onAuthenticated }) {
     <main className="moderation-login">
       <form onSubmit={submit}>
         <LockKeyhole />
-        <span className="eyebrow">Private operator surface</span>
+        <span className="eyebrow">Operator access</span>
         <h1>Moderation console</h1>
-        <p>Reviewers use no public account. Operators use this queue for exceptions and overrides.</p>
+        <p>Reviewers post without public accounts. Use this queue to handle appeals, reports and overrides.</p>
         <label>Operator secret<input type="password" autoComplete="current-password" value={secret} onChange={(event) => setSecret(event.target.value)} /></label>
         {error && <p className="publish-error"><AlertTriangle /> {error}</p>}
         <button className="button primary" disabled={submitting || secret.length < 20}>{submitting ? "Checking…" : "Open queue"}</button>
@@ -130,14 +130,14 @@ export default function ModerationDashboard() {
     }
   };
 
-  if (authenticated === null) return <main className="moderation-loading"><ShieldAlert /> Checking operator session…</main>;
+  if (authenticated === null) return <main className="moderation-loading"><ShieldAlert /> Checking session…</main>;
   if (!authenticated) return <Login onAuthenticated={() => { setAuthenticated(true); load(); }} />;
 
   const configReady = health && Object.values(health.configuration).every(Boolean);
   return (
     <main className="moderation-console">
       <header className="moderation-topbar">
-        <div><span className="logo-mark">KK</span><strong>Operator exceptions</strong><small>Private · Core 0.1</small></div>
+        <div><span className="logo-mark">KK</span><strong>Moderation queue</strong><small>Private · Core 0.1</small></div>
         <nav>
           <a href="/"><ArrowLeft /> Public site</a>
           <button disabled={busy} onClick={runQueue}><Bot /> Run queue</button>
@@ -157,11 +157,11 @@ export default function ModerationDashboard() {
       <div className="moderation-workspace">
         <aside className="case-list">
           <header><h1>Queue</h1><span>{cases.length} open</span></header>
-          {!cases.length && <div className="queue-empty"><Check /><strong>Queue clear</strong><small>The queue has no cases.</small></div>}
+          {!cases.length && <div className="queue-empty"><Check /><strong>No open cases</strong></div>}
           {cases.map((item) => (
             <button key={`${item.kind}-${item.targetId}`} className={`${selectedId === item.targetId ? "selected" : ""} ${item.urgent ? "urgent" : ""}`} onClick={() => { setSelectedId(item.targetId); setReason(""); }}>
               <span>{item.kind}</span><strong>{item.courseCode} · {item.lecturerName}</strong>
-              <small><Clock3 /> {age(item.createdAt)} old · {item.state}</small>
+              <small><Clock3 /> Open for {age(item.createdAt)} · {item.state}</small>
               {item.urgent && <em><ShieldAlert /> Urgent removal</em>}
             </button>
           ))}
@@ -184,10 +184,10 @@ export default function ModerationDashboard() {
             {selected.lastError && <div className="job-error"><AlertTriangle /> Retry queue: {selected.lastError}</div>}
             {selected.agentFindings.length > 0 && <section className="agent-findings"><h3>Private agent findings</h3>{selected.agentFindings.map((finding) => <div key={finding.agent}><strong>{finding.agent}</strong><span>{finding.severity}</span><p>{finding.rationale}</p></div>)}</section>}
             <section className="human-decision">
-              <h3>Operator override</h3>
+              <h3>Operator decision</h3>
               <label>Private reason<input value={reason} maxLength={500} placeholder="Record the policy basis and evidence considered…" onChange={(event) => setReason(event.target.value)} /></label>
               <div>{actions[selected.kind].map(([action, label]) => <button key={action} className={action === "remove" || action === "reject" ? "danger" : ""} disabled={busy || reason.trim().length < 10} onClick={() => decide(action)}>{label}</button>)}</div>
-              {["retry", "dead"].includes(selected.jobState) && <button className="retry-button" disabled={busy} onClick={retry}><RefreshCw /> Retry agent job now</button>}
+              {["retry", "dead"].includes(selected.jobState) && <button className="retry-button" disabled={busy} onClick={retry}><RefreshCw /> Retry Qwen check</button>}
             </section>
           </>}
         </article>

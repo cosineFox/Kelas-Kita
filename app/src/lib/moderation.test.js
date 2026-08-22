@@ -22,7 +22,7 @@ test("holds serious allegations without judging whether they are true", () => {
   const decision = decideModeration({ kind: "review", analysis, aiAvailable: true });
   assert.equal(decision.action, "hold");
   assert.equal(decision.status, "held");
-  assert.match(decision.summary, /unverified allegation/i);
+  assert.match(decision.summary, /could not verify/i);
 });
 
 test("publishes only after a clean agent pass", () => {

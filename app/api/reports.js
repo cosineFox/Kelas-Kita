@@ -19,7 +19,7 @@ export default endpoint(["POST"], async (request, response) => {
     action: "escalate",
     appealable: true,
     status: "pending",
-    summary: "We recorded the report and added it to the moderation queue.",
+    summary: "We queued your report.",
     version: "core-0.1",
     model: null,
   };

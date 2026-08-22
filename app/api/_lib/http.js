@@ -44,7 +44,7 @@ const publicError = (error) => {
     return new HttpError(409, "duplicate_submission", "We already received a matching submission.");
   }
   if (error?.code === "23503") {
-    return new HttpError(400, "invalid_reference", "The selected record is no longer available.");
+    return new HttpError(400, "invalid_reference", "We cannot find the selected record.");
   }
   return new HttpError(500, "internal_error", "The server could not finish that request.");
 };

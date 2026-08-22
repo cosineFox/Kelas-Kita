@@ -4,7 +4,7 @@ import { HttpError } from "./http.js";
 import { encryptPrivateText } from "./privateData.js";
 import { receiptHash, requestHash } from "./identity.js";
 
-const first = (rows, message = "The selected record is no longer available.") => {
+const first = (rows, message = "We cannot find the selected record.") => {
   if (!rows[0]) throw new HttpError(404, "not_found", message);
   return rows[0];
 };

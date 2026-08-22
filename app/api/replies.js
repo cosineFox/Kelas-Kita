@@ -19,7 +19,7 @@ export default endpoint(["POST"], async (request, response) => {
     action: "escalate",
     appealable: true,
     status: "pending",
-    summary: "We recorded the reply for identity checks and human review.",
+    summary: "We queued your reply for identity and content checks.",
     version: "core-0.1",
     model: null,
   };

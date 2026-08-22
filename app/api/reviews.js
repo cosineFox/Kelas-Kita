@@ -11,7 +11,7 @@ const pendingDecision = {
   action: "queue",
   appealable: true,
   status: "pending",
-  summary: "We kept the review private and queued another moderation attempt.",
+  summary: "Qwen did not respond. We kept the review private and queued another check.",
   version: "core-0.1",
   model: null,
 };

@@ -19,7 +19,7 @@ export default endpoint(["POST"], async (request, response) => {
     action: "escalate",
     appealable: true,
     status: "pending",
-    summary: "We recorded the appeal for a separate human review.",
+    summary: "We queued your appeal for operator review.",
     version: "core-0.1",
     model: null,
   };

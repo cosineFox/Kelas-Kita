@@ -517,15 +517,6 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
     var(--paper);
   isolation: isolate;
 }
-.hero::after {
-  content: "* peer review performed by whoever was online";
-  position: absolute;
-  right: max(28px, calc((100vw - 1110px) / 2));
-  bottom: 32px;
-  max-width: 220px;
-  font: 16px/1.1 var(--scribble);
-  transform: rotate(-4deg);
-}
 .hero-copy { width: min(100%, 1030px); }
 .hero-sticker {
   width: max-content;
@@ -547,7 +538,15 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   letter-spacing: .005em;
   text-transform: uppercase;
 }
-.hero h1 span { display: inline-block; padding: 0 .08em; background: var(--acid); transform: rotate(-1deg); }
+.hero h1 span {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0 .08em;
+  background: var(--acid);
+  white-space: normal;
+  transform: rotate(-1deg);
+}
 .hero h1 span::after { display: none; }
 .hero p { max-width: 790px; margin: 27px 0 26px; color: var(--ink); font-size: 14px; font-weight: 700; line-height: 1.55; }
 .search-box {
@@ -752,7 +751,6 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   .hero { min-height: 280px; padding: 40px 22px; }
   .hero h1 { font-size: clamp(42px, 12vw, 58px); }
   .hero p { font-size: 14px; line-height: 1.5; }
-  .hero::after { display: none; }
   .hero-sticker { margin-left: 0; }
   .explore-layout { width: 100%; grid-template-columns: 1fr; margin: 0; border: 0; box-shadow: none; }
   .filters { padding: 14px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 0; border-bottom: 1px solid var(--line); }
@@ -795,8 +793,8 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   .trust-sheet { width: 100%; height: 100%; border: 0; }
   .trust-overview { grid-template-columns: 1fr; }
   .trust-nav { padding: 10px 16px 12px; display: block; overflow: visible; border-right: 0; border-bottom: 1px solid var(--line); }
-  .trust-tabs { display: flex; overflow-x: auto; }
-  .trust-tabs button { flex: 0 0 auto; border-left: 0; border-bottom: 2px solid transparent; }
+  .trust-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; overflow: visible; }
+  .trust-tabs button { width: 100%; border-left: 0; border-bottom: 2px solid transparent; }
   .trust-tabs button.active { border-bottom-color: var(--coral); }
   .trust-actions { margin: 9px 0 0; padding: 9px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 0; border-top: 1px solid var(--ink); }
   .trust-actions button { width: 100%; height: 56px; min-height: 56px; padding: 6px 4px; flex-direction: column; justify-content: center; gap: 4px; color: var(--ink); font-size: 8px; line-height: 1; text-align: center; }
