@@ -119,7 +119,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
           <div className="hero-copy">
             <span className="hero-sticker">reviews from students who took the class</span>
             <h1>Pick a class<br /><span>without the character arc.</span></h1>
-            <p>Read about workload, teaching and assessment before you enrol.</p>
+            <p>Find out if the workload is cooked, the teaching hits, or the assessments are straight academic warfare before you lock in.</p>
             <label className="search-box">
               <Search aria-hidden="true" />
               <span className="sr-only">Search courses, lecturers, or universities</span>
