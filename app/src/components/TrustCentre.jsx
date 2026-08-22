@@ -32,7 +32,7 @@ function Experiment() {
   return (
     <>
       <h2>How the robot cooks</h2>
-      <p className="trust-lead">Qwen tags four kinds of risk in one call. The Core applies fixed rules to those tags. We hide reviewer identities from public pages. Neither Qwen nor the Core can verify allegations.</p>
+      <p className="trust-lead">Qwen reads the yap once and tags four risks. The Core, a deterministic hall monitor, picks an outcome from fixed rules. We keep reviewer identities off public pages. Neither system can verify allegations.</p>
       <div className="core-map" aria-label="Moderation system architecture">
         <div className="agent-bank">
           <span><ShieldAlert /><strong>Danger check</strong><small>Threats and harassment</small></span>
@@ -212,7 +212,7 @@ function CaseForm({ mode, context, courses, lecturers, reviews, onNavigate, onRe
           {mode === "reply" && <label>University email <span>kept private</span><input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@university.edu.my" /></label>}
           {mode === "appeal" && <label>Contact email <span>optional and private</span><input type="email" value={contact} onChange={(event) => setContact(event.target.value)} placeholder="Use this address for appeal follow-up" /></label>}
           <label>{mode === "reply" ? "Proposed reply" : mode === "appeal" ? "Reason for changing the decision" : "Evidence and policy concern"}<textarea required minLength={mode === "report" ? 20 : 70} maxLength={1500} value={mode === "reply" ? body : details} onChange={(event) => mode === "reply" ? setBody(event.target.value) : setDetails(event.target.value)} /></label>
-          {mode === "report" && <div className="urgent-note"><ShieldAlert /><span>The Core instantly benches reviews with strong threat or personal-information flags. Other reports enter the queue without hiding the review.</span></div>}
+          {mode === "report" && <div className="urgent-note"><ShieldAlert /><span>The Core benches reviews with strong threat or personal-information flags. Other reports enter the queue without hiding the review.</span></div>}
           <Turnstile onToken={setTurnstileToken} resetKey={turnstileReset} />
           {error && <p className="publish-error"><AlertTriangle />{error}</p>}
           <button className="button primary" disabled={submitting || !turnstileToken || (mode !== "appeal" && !reviewId) || (mode === "appeal" && !linkedReportAppeal && !receipt)}>{submitting ? "Qwen is judging…" : !turnstileToken ? "Prove you are not a bot" : mode === "report" ? "Send the snitch report" : mode === "appeal" ? "Run it back" : "Send counter-yap"}<ArrowRight /></button>
