@@ -329,6 +329,22 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
 .trust-article, .case-page, .case-result { min-height: 0; overflow-y: auto; padding: 38px 48px 50px; }
 .trust-article h2, .case-page h2, .case-result h2 { margin: 0; font: 700 clamp(31px, 4vw, 44px)/1.05 var(--display); letter-spacing: -.035em; }
 .trust-lead { max-width: 760px; margin: 12px 0 30px; color: #394763; font: 16px/1.6 Georgia, serif; }
+.trust-section-intro { display: grid; grid-template-columns: minmax(0, 1fr) 230px; align-items: center; gap: 28px; margin-bottom: 30px; }
+.trust-section-intro .trust-lead { margin-bottom: 0; }
+.trust-spot-art {
+  position: relative;
+  margin: 0;
+  padding: 8px;
+  border: 2px solid var(--ink);
+  background: var(--acid);
+  box-shadow: 6px 6px 0 var(--ink);
+  transform: rotate(1.5deg);
+}
+.trust-spot-art::before { content: ""; position: absolute; top: -10px; left: 34%; width: 62px; height: 18px; background: rgba(243,239,223,.82); border: 1px solid rgba(24,24,16,.22); transform: rotate(-4deg); }
+.trust-spot-art img { display: block; width: 100%; height: auto; }
+.trust-spot-art.art-moderation { background: var(--blue); transform: rotate(-1.5deg); }
+.trust-spot-art.art-privacy { background: #b9d7ef; transform: rotate(1deg); }
+.trust-spot-art.art-terms { background: var(--coral); transform: rotate(-1deg); }
 .trust-article > h3 { margin: 34px 0 13px; font: 700 19px var(--display); }
 .core-map { display: grid; grid-template-columns: minmax(260px, 1.25fr) 30px minmax(160px, .7fr) 30px minmax(105px, .48fr); align-items: center; gap: 10px; padding: 22px; border: 1px solid var(--line); background: var(--blue); transform: rotate(-.25deg); }
 .agent-bank { display: grid; counter-reset: robot-check; padding: 7px 14px; border: 2px dashed var(--ink); background: #fffdf5; }
@@ -833,6 +849,8 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   .trust-actions button span { white-space: nowrap; }
   .trust-actions svg { flex: 0 0 auto; width: 14px; height: 14px; stroke: currentColor; }
   .trust-article, .case-page, .case-result { padding: 28px 24px 40px; }
+  .trust-section-intro { grid-template-columns: 1fr; gap: 20px; }
+  .trust-spot-art { width: min(260px, 78vw); }
   .core-map { grid-template-columns: 1fr; }
   .core-arrow { transform: rotate(90deg); }
   .policy-core { min-height: 85px; }

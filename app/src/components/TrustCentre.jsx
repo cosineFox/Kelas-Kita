@@ -28,11 +28,21 @@ const reviewLabel = (review, courses, lecturers) => {
   return `${course?.code ?? "Course"} · ${lecturer?.name ?? "Lecturer"}`;
 };
 
+function IllustratedIntro({ title, copy, image, tone }) {
+  return (
+    <header className="trust-section-intro">
+      <div><h2>{title}</h2><p className="trust-lead">{copy}</p></div>
+      <figure className={`trust-spot-art art-${tone}`} aria-hidden="true">
+        <img src={image} alt="" width="640" height="426" loading="lazy" decoding="async" />
+      </figure>
+    </header>
+  );
+}
+
 function Experiment() {
   return (
     <>
-      <h2>How moderation works</h2>
-      <p className="trust-lead">Qwen checks the text for four risks. Fixed rules choose what happens next. Neither system can verify an allegation.</p>
+      <IllustratedIntro title="How moderation works" copy="Qwen checks the text for four risks. Fixed rules choose what happens next. Neither system can verify an allegation." image="/trust-art/moderation.png" tone="moderation" />
       <div className="core-map" aria-label="Moderation system architecture">
         <div className="agent-bank">
           <span><ShieldAlert /><strong>Threats</strong><small>Threats and harassment</small></span>
@@ -63,8 +73,7 @@ function Experiment() {
 function Rules() {
   return (
     <>
-      <h2>Rules</h2>
-      <p className="trust-lead">Review the class and lecturer. Stick to what happened to you.</p>
+      <IllustratedIntro title="Rules" copy="Review the class and lecturer. Stick to what happened to you." image="/trust-art/rules.png" tone="rules" />
       <div className="rule-columns">
         <section><CircleCheck /><h3>Post this</h3><ul><li>Teaching clarity and class format</li><li>Assessment design and feedback timing</li><li>Workload and prerequisites</li><li>Events you experienced yourself</li></ul></section>
         <section><X /><h3>Do not post this</h3><ul><li>Threats, slurs and personal attacks</li><li>Phone numbers, addresses and identity numbers</li><li>Impersonation and coordinated ratings</li><li>Rumours presented as personal knowledge</li></ul></section>
@@ -78,8 +87,7 @@ function Privacy() {
   const operator = import.meta.env.VITE_OPERATOR_CONTACT_EMAIL;
   return (
     <>
-      <h2>Privacy</h2>
-      <p className="trust-lead">You can post without an account. We omit reviewer identities from public pages. Cloudflare and Vercel keep technical records, and investigators may obtain them through legal process.</p>
+      <IllustratedIntro title="Privacy" copy="You can post without an account. We omit reviewer identities from public pages. Cloudflare and Vercel keep technical records, and investigators may obtain them through legal process." image="/trust-art/privacy.png" tone="privacy" />
       <dl className="policy-list">
         <div><dt>AI processing</dt><dd>We send review and case text through Vercel AI Gateway to Qwen. We exclude contact details from those requests.</dd></div>
         <div><dt>Security logs</dt><dd>Cloudflare and Vercel may keep network and security logs. KelasKita stores rotating abuse-signal hashes instead of raw IP addresses.</dd></div>
@@ -97,8 +105,7 @@ function Privacy() {
 function Terms() {
   return (
     <>
-      <h2>Terms</h2>
-      <p className="trust-lead">You must be 18 or older and write from your own academic experience.</p>
+      <IllustratedIntro title="Terms" copy="You must be 18 or older and write from your own academic experience." image="/trust-art/terms.png" tone="terms" />
       <ol className="terms-list">
         <li><strong>Write from experience.</strong><span>Do not submit rumours or claim to speak for another person.</span></li>
         <li><strong>This is not a complaint channel.</strong><span>Use your university’s formal process for serious misconduct.</span></li>
