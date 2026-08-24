@@ -18,7 +18,7 @@ import { courseDuplicates, lecturerDuplicates } from "../lib/catalog";
 import { analyseFeedback } from "../lib/moderation";
 import Turnstile from "./Turnstile";
 
-const steps = ["Class", "Aura", "Yap", "Final boss"];
+const steps = ["Class", "Ratings", "Review", "Submit"];
 const blankCourse = { code: "", name: "", university: "", faculty: "" };
 
 const Stars = ({ label, value, onChange }) => (
@@ -145,10 +145,10 @@ export default function ReviewFlow({
 
   if (submission) {
     const stateCopy = {
-      held: ["Your yap got benched.", "The review and its ratings stay private. Send serious claims to your university’s reporting office."],
-      pending: ["Your yap is in the queue.", "The review and its ratings stay private until moderation finishes."],
-      published: ["Your yap survived.", "Students can read it, and its ratings now count towards the course score."],
-      rejected: ["Your yap did not clear the vibe check.", "Qwen flagged a safety or privacy risk. Use your receipt to appeal."],
+      held: ["Review held.", "The review and ratings stay private. Report serious claims to your university."],
+      pending: ["Review queued.", "The review and ratings stay private until moderation finishes."],
+      published: ["Review posted.", "Students can read it. Its ratings now count."],
+      rejected: ["Review rejected.", "It triggered a safety or privacy rule. Use your receipt to appeal."],
     }[submission.review.status];
     return (
       <div className="review-layer" role="dialog" aria-modal="true" aria-labelledby="success-title">
@@ -157,8 +157,8 @@ export default function ReviewFlow({
           <div className="success-mark"><ShieldCheck /></div>
           <h2 id="success-title">{stateCopy[0]}</h2>
           <p>{stateCopy[1]}</p>
-          <div className="success-checks"><span><Check /> Entered as pending</span><span><Check /> Ratings ignored until publication</span><span><Bot /> Core verdict: {submission.decision.action.replaceAll("_", " ")}</span></div>
-          {submission.receipt && <div className="moderation-receipt"><strong>Screenshot this receipt, bestie</strong><code>{submission.receipt}</code><small>We show it once. You need it to appeal.</small></div>}
+          <div className="success-checks"><span><Check /> Started as pending</span><span><Check /> Ratings excluded until publication</span><span><Bot /> Decision: {submission.decision.action.replaceAll("_", " ")}</span></div>
+          {submission.receipt && <div className="moderation-receipt"><strong>Save this receipt</strong><code>{submission.receipt}</code><small>You need it to appeal. It appears once.</small></div>}
           <button className="button primary" onClick={onClose}>Back to the board <ArrowRight /></button>
         </section>
       </div>
@@ -172,8 +172,8 @@ export default function ReviewFlow({
         <div className="ticket-edge" aria-hidden="true" />
         <header className="review-header">
           <div>
-            <h2 id="review-title" ref={titleRef} tabIndex="-1">Drop the academic lore</h2>
-            <p>Useful details only. Fan fiction gets benched.</p>
+            <h2 id="review-title" ref={titleRef} tabIndex="-1">Post a review</h2>
+            <p>Write what happened in class.</p>
           </div>
           <button className="icon-button" onClick={onClose} aria-label="Close"><X /></button>
         </header>
@@ -208,7 +208,7 @@ export default function ReviewFlow({
                   <ChevronDown />
                 </div>
                 <button className="text-action" type="button" onClick={() => setAddingCourse((value) => !value)}>
-                  {addingCourse ? "Never mind" : "Class missing? Spawn it"}
+                  {addingCourse ? "Cancel" : "Class missing? Add it"}
                 </button>
 
                 {courseMenu && !addingCourse && (
@@ -223,7 +223,7 @@ export default function ReviewFlow({
 
                 {addingCourse && (
                   <div className="add-form">
-                    <div className="add-heading"><strong>Spawn a class</strong><span>It saves with your review.</span></div>
+                    <div className="add-heading"><strong>Add a class</strong><span>We save it with your review.</span></div>
                     <div className="field-grid">
                       {[
                         ["code", "Course code", "e.g., COMP2013"],
@@ -235,14 +235,14 @@ export default function ReviewFlow({
                       ))}
                     </div>
                     <div className={`duplicate-state ${duplicates.length ? "has-match" : ""}`}>
-                      {duplicates.length ? <><AlertTriangle /><span><strong>Duplicate jumpscare:</strong> {duplicates[0].course.code} · {duplicates[0].course.name}</span><button onClick={() => selectCourse(duplicates[0].course)}>Use this one</button></> : <><CircleCheck /><span>No clone detected</span></>}
+                      {duplicates.length ? <><AlertTriangle /><span><strong>Possible duplicate:</strong> {duplicates[0].course.code} · {duplicates[0].course.name}</span><button onClick={() => selectCourse(duplicates[0].course)}>Use this one</button></> : <><CircleCheck /><span>No matching class</span></>}
                     </div>
-                    <button className="button secondary save-course" type="button" disabled={Object.values(newCourse).some((value) => !value.trim()) || duplicates.length > 0} onClick={saveCourse}>Spawn class</button>
+                    <button className="button secondary save-course" type="button" disabled={Object.values(newCourse).some((value) => !value.trim()) || duplicates.length > 0} onClick={saveCourse}>Add class</button>
                   </div>
                 )}
 
                 <div className="field-separator" />
-                <span className="field-label">Lecturer in this episode</span>
+                <span className="field-label">Lecturer for this class</span>
                 <div className="lecturer-menu">
                   {linkedLecturers.map((lecturer) => (
                     <button type="button" key={lecturer.id} className={draft.lecturerId === lecturer.id ? "selected" : ""} onClick={() => setDraft((value) => ({ ...value, lecturerId: lecturer.id }))}>
@@ -266,24 +266,24 @@ export default function ReviewFlow({
               </div>
 
               <aside className="relation-note">
-                <h3>How spawning works</h3>
-                <p>We compare course codes and lecturer names so clones do not flood the board. New records appear after publication.</p>
+                <h3>Adding classes and lecturers</h3>
+                <p>We check course codes and lecturer names for duplicates. New entries appear after publication.</p>
                 <div className="relation-map">
                   <div><strong>Course</strong><span>{selectedCourse?.code ?? "New course"}</span></div>
-                  <span>featuring <ArrowRight /></span>
+                  <span>taught by <ArrowRight /></span>
                   <div><strong>Multiple lecturers</strong><span>{linkedLecturers.length || "1+"} linked</span></div>
                 </div>
-                <div className="info-note"><CircleCheck /> One class can have multiple lecturer variants.</div>
+                <div className="info-note"><CircleCheck /> A class can have more than one lecturer.</div>
               </aside>
             </div>
           )}
 
           {step === 1 && (
             <div className="rating-step">
-              <div className="step-intro"><h3>Rate both. Mix up neither.</h3><p>The class and lecturer get separate aura scores.</p></div>
+              <div className="step-intro"><h3>Rate the class and lecturer separately.</h3></div>
               <div className="rating-panels">
-                <div><span>Class</span><h4>{selectedCourse?.name}</h4><p>Materials, assessments and whether you learnt anything.</p><Stars label="Class aura" value={draft.courseRating} onChange={(courseRating) => setDraft((value) => ({ ...value, courseRating }))} /></div>
-                <div><span>Lecturer</span><h4>{selectedLecturer?.name}</h4><p>Clarity, support and feedback game.</p><Stars label="Lecturer aura" value={draft.lecturerRating} onChange={(lecturerRating) => setDraft((value) => ({ ...value, lecturerRating }))} /></div>
+                <div><span>Class</span><h4>{selectedCourse?.name}</h4><p>Materials, assessments and learning.</p><Stars label="Class rating" value={draft.courseRating} onChange={(courseRating) => setDraft((value) => ({ ...value, courseRating }))} /></div>
+                <div><span>Lecturer</span><h4>{selectedLecturer?.name}</h4><p>Clarity, support and feedback.</p><Stars label="Lecturer rating" value={draft.lecturerRating} onChange={(lecturerRating) => setDraft((value) => ({ ...value, lecturerRating }))} /></div>
               </div>
               <fieldset className="workload-field"><legend>Workload</legend>{["Light", "Balanced", "Heavy", "Extreme"].map((workload) => <button type="button" className={draft.workload === workload ? "selected" : ""} onClick={() => setDraft((value) => ({ ...value, workload }))} key={workload}>{workload}</button>)}</fieldset>
             </div>
@@ -292,15 +292,15 @@ export default function ReviewFlow({
           {step === 2 && (
             <div className="feedback-step">
               <div className="feedback-form">
-                <div className="step-intro"><h3>Yap with substance.</h3><p>Say what happened, what helped and what cooked you.</p></div>
-                <label htmlFor="feedback">The actual lore</label>
-                <textarea id="feedback" value={draft.body} onChange={(event) => setDraft((value) => ({ ...value, body: event.target.value }))} placeholder="The worked examples carried the lectures, but dropping the project rubric after the first assignment was diabolical." />
+                <div className="step-intro"><h3>Write the review.</h3><p>Name what worked and what did not.</p></div>
+                <label htmlFor="feedback">Your review</label>
+                <textarea id="feedback" value={draft.body} onChange={(event) => setDraft((value) => ({ ...value, body: event.target.value }))} placeholder="The worked examples carried the lectures. The project rubric arrived after the first assignment." />
                 <div className="writing-meta"><span>{draft.body.length} characters</span><span>Minimum 70</span></div>
-                <div className="prompt-line"><strong>Receipts we rate:</strong> assessment pace · feedback quality · class format · prerequisites</div>
+                <div className="prompt-line"><strong>Useful details:</strong> assessment pace · feedback quality · class format · prerequisites</div>
               </div>
               <aside className="live-check">
-                <h3><ShieldCheck /> Pre-flight vibe check</h3>
-                <p>We flag obvious problems while you type. Qwen checks the full yap after submission.</p>
+                <h3><ShieldCheck /> Quick check</h3>
+                <p>We catch basic problems while you type. Qwen checks the full review after submission.</p>
                 {[
                   ["Threats", ["threat"]],
                   ["Personal attacks", ["attack"]],
@@ -310,7 +310,7 @@ export default function ReviewFlow({
                   ["Enough learning context", ["specificity"]],
                 ].map(([label, ids]) => {
                   const issue = analysis.issues.find(({ id }) => ids.includes(id));
-                  return <div key={label} className={`check-row ${issue ? issue.severity : "clear"}`}>{issue ? <AlertTriangle /> : <Check />}<span><strong>{label}</strong><small>{issue?.message ?? "Chill"}</small></span></div>;
+                  return <div key={label} className={`check-row ${issue ? issue.severity : "clear"}`}>{issue ? <AlertTriangle /> : <Check />}<span><strong>{label}</strong><small>{issue?.message ?? "Clear"}</small></span></div>;
                 })}
                 <div className="moderation-explainer"><LockKeyhole /> You can post without an account. We hide reviewer identities from public pages. Cloudflare and Vercel may keep security logs.</div>
               </aside>
@@ -319,14 +319,14 @@ export default function ReviewFlow({
 
           {step === 3 && (
             <div className="check-step">
-              <div className="step-intro"><h3>Final boss: read your own post.</h3><p>Qwen screens the text before publication or ratings count.</p></div>
+              <div className="step-intro"><h3>Read it once.</h3><p>Qwen screens the text before publication.</p></div>
               <div className="review-summary">
                 <dl><div><dt>Course</dt><dd>{selectedCourse?.code} · {selectedCourse?.name}</dd></div><div><dt>Lecturer</dt><dd>{selectedLecturer?.name}</dd></div><div><dt>Study period</dt><dd>{draft.semester} · {draft.year}</dd></div><div><dt>Ratings</dt><dd>Course {draft.courseRating}/5 · Lecturer {draft.lecturerRating}/5</dd></div></dl>
                 <blockquote>{draft.body}</blockquote>
               </div>
-              <div className="trust-queue"><ShieldCheck /><div><strong>The bot keeps receipts too</strong><p>Qwen flags risks, and the Core applies rules. Neither can verify facts or decide guilt.</p></div></div>
-              {analysis.requiresHold && <div className="formal-report-warning"><AlertTriangle /><div><strong>This yap is going straight to the bench.</strong><p>KelasKita cannot investigate serious misconduct. Send the claim to your university’s integrity or security office.</p></div></div>}
-              {analysis.blockers.length > 0 && <div className="formal-report-warning"><AlertTriangle /><div><strong>This draft failed the vibe check.</strong><p>Remove threats, personal information, links and direct insults before submitting.</p></div></div>}
+              <div className="trust-queue"><ShieldCheck /><div><strong>Moderation limits</strong><p>Qwen flags risks. Fixed rules choose an action. Neither can verify facts or decide guilt.</p></div></div>
+              {analysis.requiresHold && <div className="formal-report-warning"><AlertTriangle /><div><strong>We will hold this review.</strong><p>KelasKita cannot investigate serious misconduct. Send the claim to your university’s integrity or security office.</p></div></div>}
+              {analysis.blockers.length > 0 && <div className="formal-report-warning"><AlertTriangle /><div><strong>Fix this draft before posting.</strong><p>Remove threats, personal information, links and direct insults.</p></div></div>}
               <Turnstile onToken={setTurnstileToken} resetKey={turnstileReset} />
               {publishError && <p className="publish-error"><AlertTriangle />{publishError}</p>}
             </div>
@@ -334,10 +334,10 @@ export default function ReviewFlow({
         </div>
 
         <footer className="review-footer">
-          <div className="privacy-note"><LockKeyhole /><span><strong>No account side quest.</strong> We hide reviewer identities, log moderation decisions and accept appeals.</span></div>
+          <div className="privacy-note"><LockKeyhole /><span><strong>No account required.</strong> Public pages hide reviewer identities.</span></div>
           <div className="footer-buttons">
             <button className="button secondary" onClick={() => step ? setStep((value) => value - 1) : onClose()}>Go back</button>
-            {step < 3 ? <button className="button primary" disabled={!canContinue} onClick={() => setStep((value) => value + 1)}>Lock in <ArrowRight /></button> : <button className="button primary" disabled={submitting || !turnstileToken} onClick={submit}>{submitting ? "Qwen is judging…" : turnstileToken ? "Send the yap" : "Prove you are not a bot"} <ArrowRight /></button>}
+            {step < 3 ? <button className="button primary" disabled={!canContinue} onClick={() => setStep((value) => value + 1)}>Continue <ArrowRight /></button> : <button className="button primary" disabled={submitting || !turnstileToken} onClick={submit}>{submitting ? "Submitting…" : turnstileToken ? "Post review" : "Complete anti-bot check"} <ArrowRight /></button>}
           </div>
         </footer>
       </section>

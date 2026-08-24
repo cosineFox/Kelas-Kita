@@ -24,7 +24,7 @@ const normalisePublicState = (value = {}) => ({
   reviews: Array.isArray(value.reviews) ? value.reviews : [],
 });
 
-const message = (error) => error?.message ?? "The server is cooked. Try again later.";
+const message = (error) => error?.message ?? "The server is down. Try again later.";
 
 export default function App() {
   const [data, setData] = useState(emptyState);
@@ -82,7 +82,7 @@ export default function App() {
   const submitReview = async (draft, turnstileToken) => {
     const course = data.courses.find((item) => item.id === draft.courseId);
     const lecturer = data.lecturers.find((item) => item.id === draft.lecturerId);
-    if (!course || !lecturer) return { ok: false, error: "Pick a class and lecturer before sending the yap." };
+    if (!course || !lecturer) return { ok: false, error: "Choose a class and lecturer first." };
 
     try {
       const result = await postReview({

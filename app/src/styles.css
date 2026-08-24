@@ -621,7 +621,6 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
 .meme-section > header div { display: grid; gap: 7px; }
 .meme-section > header span { width: max-content; padding: 4px 7px; background: var(--acid); font-size: 9px; font-weight: 900; text-transform: uppercase; transform: rotate(-1deg); }
 .meme-section h2 { margin: 0; color: var(--paper); font: 400 clamp(34px, 4.8vw, 64px)/.9 var(--display); letter-spacing: .01em; text-transform: uppercase; text-shadow: 4px 4px 0 var(--ink); }
-.meme-section > header p { max-width: 260px; margin: 0 4px 4px 0; color: var(--ink); font: 700 11px/1.4 ui-monospace, monospace; text-align: right; }
 .meme-wall { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 28px; }
 .meme-scrap { position: relative; margin: 0; padding: 12px; border: 2px solid var(--ink); background: #fffdf5; box-shadow: 8px 9px 0 var(--ink); transform: rotate(-1.2deg); }
 .meme-scrap:nth-child(2) { margin-top: 22px; transform: rotate(1deg); }
@@ -805,7 +804,6 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   .course-title h3 { font-size: 21px; }
   .recent-table { padding-inline: 12px; }
   .meme-section > header { display: grid; }
-  .meme-section > header p { text-align: left; }
   footer nav { display: none; }
   .review-header p { max-width: 240px; }
   .step-rail li::before { top: 12px; }

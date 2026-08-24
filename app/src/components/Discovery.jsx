@@ -16,8 +16,8 @@ const memes = [
   {
     image: "/memes/deadline-panic.jpg",
     alt: "A panicked student facing a huge stack of assignment papers",
-    top: "Me: I'll start the assignment early",
-    bottom: "Also me at 11:58 PM",
+    top: "Me in week 1: I'll start early",
+    bottom: "Me at 11:58 PM",
   },
   {
     image: "/memes/not-in-exam.jpg",
@@ -29,7 +29,7 @@ const memes = [
     image: "/memes/workload-final-boss.jpg",
     alt: "A small course outline facing a monster made from books and calendars",
     top: "Course outline: 3 credit hours",
-    bottom: "Actual workload: final boss",
+    bottom: "The actual workload:",
   },
 ];
 
@@ -106,34 +106,34 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
           <span className="logo-mark">KK</span><span>KelasKita</span>
         </a>
         <nav aria-label="Primary navigation">
-          <a className="active" href="#explore">Class board</a>
-          <button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Don't be weird</button>
-          <button onClick={() => onTrust({ mode: "overview" })}>How the bot cooks</button>
+          <a className="active" href="#explore">Classes</a>
+          <button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Rules</button>
+          <button onClick={() => onTrust({ mode: "overview" })}>Moderation</button>
         </nav>
         <div className="header-actions">
           <button className="mobile-trust-button" onClick={() => onTrust({ mode: "overview" })} aria-label="Trust centre">
             <ShieldCheck aria-hidden="true" />
           </button>
           <button className="button primary" disabled={!submissionsOpen} onClick={onReview}><PenLine /> Start yapping</button>
-          <span className="no-account">{submissionsOpen ? "yap portal open" : "yap portal closed"}</span>
+          <span className="no-account">{submissionsOpen ? "posting open" : "posting closed"}</span>
         </div>
       </header>
 
       <main id="top">
-        {serviceError && <div className="service-status" role="status"><ShieldCheck /><span><strong>The backend is cooked.</strong> {serviceError} Nothing you submit here will save.</span></div>}
-        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>The yap portal is locked.</strong> Lurk for now.</span></div>}
+        {serviceError && <div className="service-status" role="status"><ShieldCheck /><span><strong>The server is down.</strong> {serviceError}</span></div>}
+        {!loading && !serviceError && !submissionsOpen && <div className="service-status" role="status"><ShieldCheck /><span><strong>Posting is closed.</strong></span></div>}
         <section className="hero">
           <div className="hero-copy">
-            <span className="hero-sticker">student takes with Qwen opp-checking included</span>
+            <span className="hero-sticker">student reviews. Qwen on clean-up.</span>
             <h1>Clock the class<br /><span>before it clocks you.</span></h1>
-            <p>Find out if the workload is cooked, the teaching hits, or the assessments are straight academic warfare before you lock in.</p>
+            <p>See the workload, lecturer and assessment mess before you enrol.</p>
             <label className="search-box">
               <Search aria-hidden="true" />
               <span className="sr-only">Search courses, lecturers, or universities</span>
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search the academic opp list"
+                placeholder="Class or lecturer"
               />
               {query && <kbd>{filtered.length} found</kbd>}
             </label>
@@ -143,7 +143,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
         <section className="explore-layout" id="explore">
           <div className="results">
             <div className="results-heading">
-              <div><h2>{query ? "Opps located" : "The class board"}</h2></div>
+              <div><h2>{query ? "Search results" : "Classes"}</h2></div>
             </div>
             <div className="course-list">
               {filtered.length ? filtered.slice(0, query ? 6 : 3).map((course) => (
@@ -157,20 +157,19 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
               )) : (
                 <div className="empty-state">
                   <div className="empty-pin-grid" aria-hidden="true">{Array.from({ length: 6 }, (_, index) => <span key={index} />)}</div>
-                  <div className="empty-copy"><Search /><h3>{loading ? "Loading the academic DLC" : query ? "No opps found" : "The board has zero aura"}</h3><p>{loading ? "Fetching classes and published yaps." : submissionsOpen ? "Add the class with your review. It appears after moderation." : "Posting is locked. Lurk for now."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Spawn this class" : "Drop the first yap"}</button>}</div>
+                  <div className="empty-copy"><Search /><h3>{loading ? "Loading…" : query ? "No match" : "No reviews yet"}</h3><p>{loading ? "" : submissionsOpen ? "Post the first one." : "Posting is closed."}</p>{!loading && submissionsOpen && <button className="button primary" onClick={onReview}>{query ? "Add this class" : "Post a review"}</button>}</div>
                 </div>
               )}
             </div>
             <div className="moderation-banner">
               <Bot />
-              <span>Qwen checks whether your yap contains threats, personal data, serious allegations or spam. The Core then applies the rules.</span>
-              <button onClick={() => onTrust({ mode: "overview" })}>Enter the bot basement</button>
+              <span>Qwen checks posts for threats, doxxing, serious claims and spam.</span>
+              <button onClick={() => onTrust({ mode: "overview" })}>How moderation works</button>
             </div>
 
             <section className="meme-section" aria-labelledby="meme-heading">
               <header>
-                <div><span>zero academic citations</span><h2 id="meme-heading">Academic brainrot archive</h2></div>
-                <p>Original campus specimens. No stolen templates.</p>
+                <div><span>the syllabus was lying</span><h2 id="meme-heading">Meme dump</h2></div>
               </header>
               <div className="meme-wall">
                 {memes.map((meme) => (
@@ -184,7 +183,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
             </section>
 
             <section className="recent-section">
-              <div className="results-heading"><div><h2>Fresh yaps</h2></div></div>
+              <div className="results-heading"><div><h2>Latest yaps</h2></div></div>
               <div className="recent-table" role="table" aria-label="Latest course reviews">
                 {!recent.length && <p className="recent-empty">The group chat has said nothing.</p>}
                 {recent.map((review) => {
@@ -206,7 +205,7 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
         </section>
       </main>
 
-      <footer><span>© 2026 KelasKita · Independent, unserious and not endorsed by any listed university.</span><nav><button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Don't be weird</button><button onClick={() => onTrust({ mode: "overview", tab: "privacy" })}>Privacy stuff</button><button onClick={() => onTrust({ mode: "overview", tab: "terms" })}>Actual terms</button><a href="#top">Beam up</a></nav></footer>
+      <footer><span>© 2026 KelasKita · Not run by your university.</span><nav><button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Rules</button><button onClick={() => onTrust({ mode: "overview", tab: "privacy" })}>Privacy</button><button onClick={() => onTrust({ mode: "overview", tab: "terms" })}>Terms</button><a href="#top">Top</a></nav></footer>
     </div>
   );
 }

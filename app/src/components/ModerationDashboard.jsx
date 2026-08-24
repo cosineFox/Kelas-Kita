@@ -47,13 +47,13 @@ function Login({ onAuthenticated }) {
     <main className="moderation-login">
       <form onSubmit={submit}>
         <LockKeyhole />
-        <span className="eyebrow">Authorised opps only</span>
-        <h1>The mod basement</h1>
-        <p>Reports, appeals and robot fumbles live here. The public does not.</p>
-        <label>Basement key<input type="password" autoComplete="current-password" value={secret} onChange={(event) => setSecret(event.target.value)} /></label>
+        <span className="eyebrow">Operator access</span>
+        <h1>Moderation</h1>
+        <p>Reports, appeals and review decisions.</p>
+        <label>Operator key<input type="password" autoComplete="current-password" value={secret} onChange={(event) => setSecret(event.target.value)} /></label>
         {error && <p className="publish-error"><AlertTriangle /> {error}</p>}
-        <button className="button primary" disabled={submitting || secret.length < 20}>{submitting ? "Checking the aura…" : "Enter basement"}</button>
-        <a href="/"><ArrowLeft /> Escape to public site</a>
+        <button className="button primary" disabled={submitting || secret.length < 20}>{submitting ? "Checking…" : "Sign in"}</button>
+        <a href="/"><ArrowLeft /> Public site</a>
       </form>
     </main>
   );
@@ -130,19 +130,19 @@ export default function ModerationDashboard() {
     }
   };
 
-  if (authenticated === null) return <main className="moderation-loading"><ShieldAlert /> Checking basement pass…</main>;
+  if (authenticated === null) return <main className="moderation-loading"><ShieldAlert /> Checking session…</main>;
   if (!authenticated) return <Login onAuthenticated={() => { setAuthenticated(true); load(); }} />;
 
   const configReady = health && Object.values(health.configuration).every(Boolean);
   return (
     <main className="moderation-console">
       <header className="moderation-topbar">
-        <div><span className="logo-mark">KK</span><strong>The consequences queue</strong><small>Private · Core 0.1</small></div>
+        <div><span className="logo-mark">KK</span><strong>Moderation queue</strong><small>Private · Core 0.1</small></div>
         <nav>
-          <a href="/"><ArrowLeft /> Public chaos</a>
-          <button disabled={busy} onClick={runQueue}><Bot /> Make Qwen cook</button>
-          <button onClick={() => load()}><RefreshCw /> Refresh lore</button>
-          <button onClick={async () => { await adminLogout(); setAuthenticated(false); }}>Leave basement</button>
+          <a href="/"><ArrowLeft /> Public site</a>
+          <button disabled={busy} onClick={runQueue}><Bot /> Run queue</button>
+          <button onClick={() => load()}><RefreshCw /> Refresh</button>
+          <button onClick={async () => { await adminLogout(); setAuthenticated(false); }}>Sign out</button>
         </nav>
       </header>
 
@@ -150,14 +150,14 @@ export default function ModerationDashboard() {
         <span className={health?.database.ok ? "ready" : "blocked"}><Check /> Database</span>
         <span className={configReady ? "ready" : "blocked"}>{configReady ? <Check /> : <AlertTriangle />} Configuration</span>
         <span className={health?.aiGateway.ok ? "ready" : "untested"}><Bot /> AI Gateway {health?.aiGateway.tested ? health.aiGateway.ok ? "live" : "failed" : "untested"}</span>
-        <button disabled={busy} onClick={() => load(true)}>Poke Qwen</button>
+        <button disabled={busy} onClick={() => load(true)}>Test AI</button>
       </section>
 
       {error && <p className="moderation-error"><AlertTriangle /> {error}</p>}
       <div className="moderation-workspace">
         <aside className="case-list">
-          <header><h1>Drama queue</h1><span>{cases.length} open</span></header>
-          {!cases.length && <div className="queue-empty"><Check /><strong>No drama queued</strong></div>}
+          <header><h1>Queue</h1><span>{cases.length} open</span></header>
+          {!cases.length && <div className="queue-empty"><Check /><strong>No open cases</strong></div>}
           {cases.map((item) => (
             <button key={`${item.kind}-${item.targetId}`} className={`${selectedId === item.targetId ? "selected" : ""} ${item.urgent ? "urgent" : ""}`} onClick={() => { setSelectedId(item.targetId); setReason(""); }}>
               <span>{item.kind}</span><strong>{item.courseCode} · {item.lecturerName}</strong>
@@ -168,13 +168,13 @@ export default function ModerationDashboard() {
         </aside>
 
         <article className="case-detail">
-          {!selected ? <div className="queue-empty"><ShieldAlert /><strong>Pick some drama</strong></div> : <>
+          {!selected ? <div className="queue-empty"><ShieldAlert /><strong>Select a case</strong></div> : <>
             <header>
               <div><span className="eyebrow">{selected.kind} · {selected.state}</span><h2>{selected.courseCode} · {selected.courseName}</h2><p>{selected.lecturerName} · received {new Date(selected.createdAt).toLocaleString("en-MY")}</p></div>
               {selected.urgent && <strong className="urgent-badge"><ShieldAlert /> Urgent · {age(selected.createdAt)}</strong>}
             </header>
-            <section className="case-copy"><h3>The yap in question</h3><blockquote>{selected.body}</blockquote></section>
-            {selected.details && <section className="case-copy"><h3>Extended lore</h3><p>{selected.details}</p></section>}
+            <section className="case-copy"><h3>Review text</h3><blockquote>{selected.body}</blockquote></section>
+            {selected.details && <section className="case-copy"><h3>Case details</h3><p>{selected.details}</p></section>}
             {selected.contact && <section className="private-contact"><LockKeyhole /><div><strong>Private verification contact</strong><span>{selected.contact}</span></div></section>}
             <dl className="case-metadata">
               <div><dt>Agent action</dt><dd>{selected.lastAction?.replaceAll("_", " ") ?? "Waiting"}</dd></div>
@@ -182,12 +182,12 @@ export default function ModerationDashboard() {
               <div><dt>Reason codes</dt><dd>{selected.reasonCodes?.join(", ") || "None yet"}</dd></div>
             </dl>
             {selected.lastError && <div className="job-error"><AlertTriangle /> Retry queue: {selected.lastError}</div>}
-            {selected.agentFindings.length > 0 && <section className="agent-findings"><h3>Qwen's private thoughts</h3>{selected.agentFindings.map((finding) => <div key={finding.agent}><strong>{finding.agent}</strong><span>{finding.severity}</span><p>{finding.rationale}</p></div>)}</section>}
+            {selected.agentFindings.length > 0 && <section className="agent-findings"><h3>AI findings</h3>{selected.agentFindings.map((finding) => <div key={finding.agent}><strong>{finding.agent}</strong><span>{finding.severity}</span><p>{finding.rationale}</p></div>)}</section>}
             <section className="human-decision">
               <h3>Human verdict</h3>
               <label>Private receipts<input value={reason} maxLength={500} placeholder="Record the policy basis and evidence considered…" onChange={(event) => setReason(event.target.value)} /></label>
               <div>{actions[selected.kind].map(([action, label]) => <button key={action} className={action === "remove" || action === "reject" ? "danger" : ""} disabled={busy || reason.trim().length < 10} onClick={() => decide(action)}>{label}</button>)}</div>
-              {["retry", "dead"].includes(selected.jobState) && <button className="retry-button" disabled={busy} onClick={retry}><RefreshCw /> Wake Qwen up</button>}
+              {["retry", "dead"].includes(selected.jobState) && <button className="retry-button" disabled={busy} onClick={retry}><RefreshCw /> Retry job</button>}
             </section>
           </>}
         </article>
