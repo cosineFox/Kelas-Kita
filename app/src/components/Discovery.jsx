@@ -12,6 +12,27 @@ import {
 } from "lucide-react";
 import { publishedReviews, summariseCourse } from "../lib/reviews";
 
+const memes = [
+  {
+    image: "/memes/deadline-panic.jpg",
+    alt: "A panicked student facing a huge stack of assignment papers",
+    top: "Me: I'll start the assignment early",
+    bottom: "Also me at 11:58 PM",
+  },
+  {
+    image: "/memes/not-in-exam.jpg",
+    alt: "A lecturer erasing a board packed with equations",
+    top: "Lecturer: this won't be in the exam",
+    bottom: "The exam:",
+  },
+  {
+    image: "/memes/workload-final-boss.jpg",
+    alt: "A small course outline facing a monster made from books and calendars",
+    top: "Course outline: 3 credit hours",
+    bottom: "Actual workload: final boss",
+  },
+];
+
 const RatingBlock = ({ distribution, label, value, count }) => (
   <div className="rating-block" aria-label={count ? `${label} rating ${value.toFixed(1)} out of 5` : `${label} not yet rated`}>
     <span>{label}</span>
@@ -145,6 +166,22 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
               <span>Qwen checks whether your yap contains threats, personal data, serious allegations or spam. The Core then applies the rules.</span>
               <button onClick={() => onTrust({ mode: "overview" })}>Enter the bot basement</button>
             </div>
+
+            <section className="meme-section" aria-labelledby="meme-heading">
+              <header>
+                <div><span>zero academic citations</span><h2 id="meme-heading">Academic brainrot archive</h2></div>
+                <p>Original campus specimens. No stolen templates.</p>
+              </header>
+              <div className="meme-wall">
+                {memes.map((meme) => (
+                  <figure className="meme-scrap" key={meme.image}>
+                    <figcaption className="meme-top">{meme.top}</figcaption>
+                    <img src={meme.image} alt={meme.alt} width="960" height="720" loading="lazy" />
+                    <figcaption className="meme-bottom">{meme.bottom}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </section>
 
             <section className="recent-section">
               <div className="results-heading"><div><h2>Fresh yaps</h2></div></div>

@@ -616,6 +616,20 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   transform: rotate(-.35deg);
 }
 .moderation-banner button { color: var(--ink); font: 900 9px ui-monospace, monospace; text-transform: uppercase; text-decoration: underline; }
+.meme-section { padding: 46px 34px 54px; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); background: var(--coral); overflow: hidden; }
+.meme-section > header { margin-bottom: 34px; display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+.meme-section > header div { display: grid; gap: 7px; }
+.meme-section > header span { width: max-content; padding: 4px 7px; background: var(--acid); font-size: 9px; font-weight: 900; text-transform: uppercase; transform: rotate(-1deg); }
+.meme-section h2 { margin: 0; color: var(--paper); font: 400 clamp(34px, 4.8vw, 64px)/.9 var(--display); letter-spacing: .01em; text-transform: uppercase; text-shadow: 4px 4px 0 var(--ink); }
+.meme-section > header p { max-width: 260px; margin: 0 4px 4px 0; color: var(--ink); font: 700 11px/1.4 ui-monospace, monospace; text-align: right; }
+.meme-wall { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 28px; }
+.meme-scrap { position: relative; margin: 0; padding: 12px; border: 2px solid var(--ink); background: #fffdf5; box-shadow: 8px 9px 0 var(--ink); transform: rotate(-1.2deg); }
+.meme-scrap:nth-child(2) { margin-top: 22px; transform: rotate(1deg); }
+.meme-scrap:nth-child(3) { transform: rotate(-.35deg); }
+.meme-scrap::before { content: ""; position: absolute; z-index: 2; top: -13px; left: 50%; width: 64px; height: 22px; background: rgba(216,255,69,.82); border: 1px solid rgba(24,24,16,.3); transform: translateX(-50%) rotate(2deg); }
+.meme-scrap img { width: 100%; height: auto; display: block; border: 2px solid var(--ink); aspect-ratio: 4 / 3; object-fit: cover; filter: contrast(1.03) saturate(.92); }
+.meme-scrap figcaption { padding: 9px 4px 7px; color: var(--ink); font: 400 clamp(20px, 2.15vw, 34px)/.95 var(--display); text-align: center; text-transform: uppercase; }
+.meme-scrap .meme-bottom { padding: 10px 4px 3px; color: var(--coral); }
 .recent-row { border-bottom: 2px dotted var(--soft-line); }
 .review-actions button { border: 1px solid var(--ink); border-radius: 0; background: var(--paper); }
 .empty-state {
@@ -730,6 +744,11 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   .recent-row p { grid-column: 1 / -1; }
   .review-actions { grid-column: 1 / -1; }
   .moderation-banner button { display: none; }
+  .meme-section { padding: 38px 22px 46px; }
+  .meme-wall { grid-template-columns: 1fr; gap: 34px; }
+  .meme-scrap { width: min(100%, 520px); justify-self: center; }
+  .meme-scrap:nth-child(2) { margin-top: 0; }
+  .meme-scrap figcaption { font-size: clamp(25px, 8vw, 38px); }
   footer { align-items: flex-start; padding: 22px; }
 
   .review-layer { inset: 0; }
@@ -785,6 +804,8 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   .results-heading h2 { font-size: 18px; }
   .course-title h3 { font-size: 21px; }
   .recent-table { padding-inline: 12px; }
+  .meme-section > header { display: grid; }
+  .meme-section > header p { text-align: left; }
   footer nav { display: none; }
   .review-header p { max-width: 240px; }
   .step-rail li::before { top: 12px; }
