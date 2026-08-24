@@ -286,6 +286,34 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
 .trust-scrim { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: rgba(8,24,52,.55); cursor: default; animation: scrim-in .35s ease both; }
 .trust-sheet { position: relative; z-index: 1; width: min(1120px, 96vw); height: min(860px, 92vh); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; overflow: hidden; background: #fff; border: 1px solid var(--ink); box-shadow: 0 28px 80px rgba(7,26,66,.22); animation: trust-in .48s var(--ease) both; }
 @keyframes trust-in { from { opacity: 0; transform: translateY(18px); } }
+.trust-sheet.from-nav {
+  --morph-colour: var(--blue);
+  transform-origin: var(--morph-x) var(--morph-y);
+  animation: trust-nav-morph .46s cubic-bezier(.22, 1, .36, 1) both;
+}
+.trust-sheet.from-nav.morph-rules { --morph-colour: var(--acid); }
+.trust-sheet.from-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: var(--morph-colour);
+  pointer-events: none;
+  animation: trust-morph-wash .46s ease-out both;
+}
+@keyframes trust-nav-morph {
+  0%, 10% {
+    transform: scale(var(--morph-scale-x), var(--morph-scale-y));
+    border-radius: 2px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  76% { transform: scale(1.012, .988); }
+  100% { transform: scale(1); border-radius: 0; }
+}
+@keyframes trust-morph-wash {
+  0%, 38% { opacity: 1; }
+  100% { opacity: 0; }
+}
 .trust-header { min-height: 72px; padding: 0 26px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--ink); }
 .trust-header > div { display: grid; gap: 3px; }
 .trust-header span { font: 700 22px var(--display); outline: 0; }
@@ -464,6 +492,30 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: .04em;
+}
+.site-header nav button {
+  isolation: isolate;
+  padding: 0 11px;
+  transition: color .12s ease-out, transform .12s ease-out, box-shadow .12s ease-out, background .12s ease-out;
+}
+.site-header nav button.nav-rules:hover,
+.site-header nav button.nav-rules:focus-visible {
+  color: var(--ink);
+  background: var(--acid);
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-2px, -2px) rotate(-1deg);
+}
+.site-header nav button.nav-moderation:hover,
+.site-header nav button.nav-moderation:focus-visible {
+  color: var(--ink);
+  background: var(--blue);
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-2px, -2px) rotate(1deg);
+}
+.site-header nav button.nav-rules:active,
+.site-header nav button.nav-moderation:active {
+  box-shadow: 1px 1px 0 var(--ink);
+  transform: translate(1px, 1px) scale(.97);
 }
 .site-header nav a.active::after { bottom: 14px; height: 8px; background: var(--acid); transform: rotate(-2deg); z-index: -1; }
 .header-actions { gap: 14px; }

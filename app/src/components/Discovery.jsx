@@ -99,6 +99,20 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
 
   const recent = publishedReviews(reviews).reverse().slice(0, 4);
 
+  const openTrustFromNav = (event, context) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    onTrust({
+      ...context,
+      origin: {
+        x: rect.left + (rect.width / 2),
+        y: rect.top + (rect.height / 2),
+        width: rect.width,
+        height: rect.height,
+        tone: context.tab === "rules" ? "rules" : "moderation",
+      },
+    });
+  };
+
   return (
     <div className="site-shell">
       <header className="site-header">
@@ -107,8 +121,8 @@ export default function Discovery({ courses, lecturers, assignments, reviews, su
         </a>
         <nav aria-label="Primary navigation">
           <a className="active" href="#explore">Classes</a>
-          <button onClick={() => onTrust({ mode: "overview", tab: "rules" })}>Rules</button>
-          <button onClick={() => onTrust({ mode: "overview" })}>Moderation</button>
+          <button className="nav-rules" aria-haspopup="dialog" onClick={(event) => openTrustFromNav(event, { mode: "overview", tab: "rules" })}>Rules</button>
+          <button className="nav-moderation" aria-haspopup="dialog" onClick={(event) => openTrustFromNav(event, { mode: "overview" })}>Moderation</button>
         </nav>
         <div className="header-actions">
           <button className="mobile-trust-button" onClick={() => onTrust({ mode: "overview" })} aria-label="Trust centre">

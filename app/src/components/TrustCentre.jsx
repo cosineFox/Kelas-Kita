@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -224,6 +224,20 @@ function CaseForm({ mode, context, courses, lecturers, reviews, onNavigate, onRe
 
 export default function TrustCentre({ context, courses, lecturers, reviews, onNavigate, onReport, onAppeal, onReply, onClose }) {
   const titleRef = useRef(null);
+  const sheetRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const sheet = sheetRef.current;
+    const origin = context.origin;
+    if (!sheet || !origin) return;
+
+    const rect = sheet.getBoundingClientRect();
+    sheet.style.setProperty("--morph-x", `${origin.x - rect.left}px`);
+    sheet.style.setProperty("--morph-y", `${origin.y - rect.top}px`);
+    sheet.style.setProperty("--morph-scale-x", Math.max(origin.width / rect.width, 0.04));
+    sheet.style.setProperty("--morph-scale-y", Math.max(origin.height / rect.height, 0.04));
+  }, [context.origin]);
+
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -239,7 +253,7 @@ export default function TrustCentre({ context, courses, lecturers, reviews, onNa
   return (
     <div className="trust-layer" role="dialog" aria-modal="true" aria-labelledby="trust-title">
       <button className="trust-scrim" aria-label="Close trust centre" onClick={onClose} />
-      <section className="trust-sheet">
+      <section ref={sheetRef} className={`trust-sheet${context.origin ? ` from-nav morph-${context.origin.tone}` : ""}`}>
         <header className="trust-header">
           <div><span ref={titleRef} id="trust-title" tabIndex="-1">KelasKita Bot Basement</span><small>Qwen + fixed rules</small></div>
           <button className="icon-button" onClick={onClose} aria-label="Close"><X /></button>
