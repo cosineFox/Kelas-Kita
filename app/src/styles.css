@@ -147,6 +147,14 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
 .ticket-edge { position: absolute; z-index: 3; left: -1px; top: 0; bottom: 0; width: 17px; pointer-events: none; background: radial-gradient(circle at 0 14px, transparent 0 7px, var(--coral) 7.5px 8.5px, #fff 9px) 0 -14px/17px 28px repeat-y; }
 @keyframes scrim-in { from { opacity: 0; } }
 @keyframes sheet-in { from { transform: translate3d(18%,0,0); clip-path: inset(0 0 0 72%); } to { transform: translate3d(0,0,0); clip-path: inset(0); } }
+.review-layer.is-closing { pointer-events: none; }
+.review-layer.is-closing .review-scrim { animation: scrim-out .3s cubic-bezier(.4, 0, 1, 1) both; }
+.review-layer.is-closing .review-sheet { animation: sheet-out .42s cubic-bezier(.4, 0, 1, 1) both; }
+@keyframes scrim-out { to { opacity: 0; } }
+@keyframes sheet-out {
+  from { transform: translate3d(0,0,0); clip-path: inset(0); }
+  to { transform: translate3d(100%,0,0); clip-path: inset(0 0 0 84%); }
+}
 .review-header { flex: 0 0 auto; padding: 32px 52px 16px 58px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
 .review-header h2 { margin: 0; font: 700 37px/1.05 var(--display); letter-spacing: -.035em; outline: 0; }
 .review-header p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }

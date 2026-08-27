@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -49,6 +49,9 @@ export default function ReviewFlow({
   onClose,
 }) {
   const titleRef = useRef(null);
+  const closeTimerRef = useRef(null);
+  const closingRef = useRef(false);
+  const [closing, setClosing] = useState(false);
   const initialCourse = courses[0];
   const initialLecturer = lecturers.find((lecturer) =>
     assignments.some((link) => link.courseId === initialCourse?.id && link.lecturerId === lecturer.id),
@@ -76,17 +79,27 @@ export default function ReviewFlow({
     body: "",
   });
 
+  const requestClose = useCallback(() => {
+    if (closingRef.current) return;
+    closingRef.current = true;
+    setClosing(true);
+    const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420;
+    closeTimerRef.current = window.setTimeout(onClose, delay);
+  }, [onClose]);
+
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     titleRef.current?.focus();
-    const escape = (event) => event.key === "Escape" && onClose();
+    const escape = (event) => event.key === "Escape" && requestClose();
     addEventListener("keydown", escape);
     return () => {
       document.body.style.overflow = previousOverflow;
       removeEventListener("keydown", escape);
     };
-  }, [onClose]);
+  }, [requestClose]);
+
+  useEffect(() => () => window.clearTimeout(closeTimerRef.current), []);
 
   const selectedCourse = courses.find((course) => course.id === draft.courseId);
   const linkedLecturers = lecturers.filter((lecturer) =>
@@ -151,23 +164,23 @@ export default function ReviewFlow({
       rejected: ["Review rejected.", "It triggered a safety or privacy rule. Use your receipt to appeal."],
     }[submission.review.status];
     return (
-      <div className="review-layer" role="dialog" aria-modal="true" aria-labelledby="success-title">
-        <button className="review-scrim" aria-label="Close review" onClick={onClose} />
+      <div className={`review-layer${closing ? " is-closing" : ""}`} role="dialog" aria-modal="true" aria-labelledby="success-title">
+        <button className="review-scrim" aria-label="Close review" onClick={requestClose} />
         <section className="review-sheet success-sheet">
           <div className="success-mark"><ShieldCheck /></div>
           <h2 id="success-title">{stateCopy[0]}</h2>
           <p>{stateCopy[1]}</p>
           <div className="success-checks"><span><Check /> Started as pending</span><span><Check /> Ratings excluded until publication</span><span><Bot /> Decision: {submission.decision.action.replaceAll("_", " ")}</span></div>
           {submission.receipt && <div className="moderation-receipt"><strong>Save this receipt</strong><code>{submission.receipt}</code><small>You need it to appeal. It appears once.</small></div>}
-          <button className="button primary" onClick={onClose}>Back to the board <ArrowRight /></button>
+          <button className="button primary" onClick={requestClose}>Back to the board <ArrowRight /></button>
         </section>
       </div>
     );
   }
 
   return (
-    <div className="review-layer" role="dialog" aria-modal="true" aria-labelledby="review-title">
-      <button className="review-scrim" aria-label="Close review" onClick={onClose} />
+    <div className={`review-layer${closing ? " is-closing" : ""}`} role="dialog" aria-modal="true" aria-labelledby="review-title">
+      <button className="review-scrim" aria-label="Close review" onClick={requestClose} />
       <section className="review-sheet">
         <div className="ticket-edge" aria-hidden="true" />
         <header className="review-header">
@@ -175,7 +188,7 @@ export default function ReviewFlow({
             <h2 id="review-title" ref={titleRef} tabIndex="-1">Post a review</h2>
             <p>Write what happened in class.</p>
           </div>
-          <button className="icon-button" onClick={onClose} aria-label="Close"><X /></button>
+          <button className="icon-button" onClick={requestClose} aria-label="Close"><X /></button>
         </header>
 
         <ol className="step-rail" aria-label="Review progress">
@@ -336,7 +349,7 @@ export default function ReviewFlow({
         <footer className="review-footer">
           <div className="privacy-note"><LockKeyhole /><span><strong>No account required.</strong> Public pages hide reviewer identities.</span></div>
           <div className="footer-buttons">
-            <button className="button secondary" onClick={() => step ? setStep((value) => value - 1) : onClose()}>Go back</button>
+            <button className="button secondary" onClick={() => step ? setStep((value) => value - 1) : requestClose()}>Go back</button>
             {step < 3 ? <button className="button primary" disabled={!canContinue} onClick={() => setStep((value) => value + 1)}>Continue <ArrowRight /></button> : <button className="button primary" disabled={submitting || !turnstileToken} onClick={submit}>{submitting ? "Submitting…" : turnstileToken ? "Post review" : "Complete anti-bot check"} <ArrowRight /></button>}
           </div>
         </footer>
