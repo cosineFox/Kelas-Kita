@@ -72,9 +72,10 @@ export default function ModerationDashboard() {
     setError("");
     try {
       const [queue, nextHealth] = await Promise.all([loadAdminQueue(), loadAdminHealth(live)]);
-      setCases(queue.cases);
+      const nextCases = Array.isArray(queue?.cases) ? queue.cases : [];
+      setCases(nextCases);
       setHealth(nextHealth);
-      setSelectedId((current) => queue.cases.some((item) => item.targetId === current) ? current : queue.cases[0]?.targetId ?? null);
+      setSelectedId((current) => nextCases.some((item) => item.targetId === current) ? current : nextCases[0]?.targetId ?? null);
     } catch (nextError) {
       if (nextError.status === 401) setAuthenticated(false);
       else setError(nextError.message);
@@ -133,7 +134,7 @@ export default function ModerationDashboard() {
   if (authenticated === null) return <main className="moderation-loading"><ShieldAlert /> Checking session…</main>;
   if (!authenticated) return <Login onAuthenticated={() => { setAuthenticated(true); load(); }} />;
 
-  const configReady = health && Object.values(health.configuration).every(Boolean);
+  const configReady = Boolean(health?.configuration && Object.values(health.configuration).every(Boolean));
   return (
     <main className="moderation-console">
       <header className="moderation-topbar">
@@ -147,9 +148,9 @@ export default function ModerationDashboard() {
       </header>
 
       <section className="moderation-status">
-        <span className={health?.database.ok ? "ready" : "blocked"}><Check /> Database</span>
+        <span className={health?.database?.ok ? "ready" : "blocked"}><Check /> Database</span>
         <span className={configReady ? "ready" : "blocked"}>{configReady ? <Check /> : <AlertTriangle />} Configuration</span>
-        <span className={health?.aiGateway.ok ? "ready" : "untested"}><Bot /> AI Gateway {health?.aiGateway.tested ? health.aiGateway.ok ? "live" : "failed" : "untested"}</span>
+        <span className={health?.aiGateway?.ok ? "ready" : "untested"}><Bot /> AI Gateway {health?.aiGateway?.tested ? health.aiGateway.ok ? "live" : "failed" : "untested"}</span>
         <button disabled={busy} onClick={() => load(true)}>Test AI</button>
       </section>
 
@@ -182,11 +183,11 @@ export default function ModerationDashboard() {
               <div><dt>Reason codes</dt><dd>{selected.reasonCodes?.join(", ") || "None yet"}</dd></div>
             </dl>
             {selected.lastError && <div className="job-error"><AlertTriangle /> Retry queue: {selected.lastError}</div>}
-            {selected.agentFindings.length > 0 && <section className="agent-findings"><h3>AI findings</h3>{selected.agentFindings.map((finding) => <div key={finding.agent}><strong>{finding.agent}</strong><span>{finding.severity}</span><p>{finding.rationale}</p></div>)}</section>}
+            {selected.agentFindings?.length > 0 && <section className="agent-findings"><h3>AI findings</h3>{selected.agentFindings.map((finding) => <div key={finding.agent}><strong>{finding.agent}</strong><span>{finding.severity}</span><p>{finding.rationale}</p></div>)}</section>}
             <section className="human-decision">
               <h3>Human verdict</h3>
               <label>Private receipts<input value={reason} maxLength={500} placeholder="Record the policy basis and evidence considered…" onChange={(event) => setReason(event.target.value)} /></label>
-              <div>{actions[selected.kind].map(([action, label]) => <button key={action} className={action === "remove" || action === "reject" ? "danger" : ""} disabled={busy || reason.trim().length < 10} onClick={() => decide(action)}>{label}</button>)}</div>
+              <div>{(actions[selected.kind] ?? []).map(([action, label]) => <button key={action} className={action === "remove" || action === "reject" ? "danger" : ""} disabled={busy || reason.trim().length < 10} onClick={() => decide(action)}>{label}</button>)}</div>
               {["retry", "dead"].includes(selected.jobState) && <button className="retry-button" disabled={busy} onClick={retry}><RefreshCw /> Retry job</button>}
             </section>
           </>}

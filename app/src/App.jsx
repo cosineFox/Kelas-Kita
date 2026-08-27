@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import Discovery from "./components/Discovery";
-import ModerationDashboard from "./components/ModerationDashboard";
 import ReviewFlow from "./components/ReviewFlow";
 import TermsGate, { hasAcceptedTerms } from "./components/TermsGate";
 import TrustCentre from "./components/TrustCentre";
@@ -46,8 +45,6 @@ export default function App() {
   }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
-
-  if (window.location.pathname === "/moderation") return <ModerationDashboard />;
 
   const addCourse = (draft) => {
     const course = {

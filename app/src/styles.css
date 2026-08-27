@@ -429,6 +429,9 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
 .moderation-login label { display: grid; gap: 7px; font-size: 11px; font-weight: 800; }
 .moderation-login input { height: 44px; padding: 0 11px; border: 1px solid var(--line); border-radius: 5px; }
 .moderation-login a { display: flex; align-items: center; gap: 7px; color: #175ac8; font-size: 11px; }
+.route-error { width: min(460px, calc(100vw - 32px)); padding: 42px; display: grid; gap: 16px; border: 1px solid var(--ink); background: #fff; box-shadow: 12px 12px 0 var(--coral); }
+.route-error strong { font: 700 30px/1 var(--display); }
+.route-error .button { width: max-content; }
 .moderation-console { min-height: 100vh; background: #f6f9fd; }
 .moderation-topbar { min-height: 68px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--ink); background: #fff; }
 .moderation-topbar > div { display: flex; align-items: center; gap: 13px; }

@@ -1,19 +1,31 @@
 const request = async (path, options = {}) => {
-  const response = await fetch(path, {
-    credentials: "same-origin",
-    ...options,
-    headers: options.body ? { "content-type": "application/json", ...options.headers } : options.headers,
-  });
-  const isJson = response.headers.get("content-type")?.includes("application/json");
-  const payload = isJson ? await response.json().catch(() => ({})) : {};
-  if (!isJson) throw new Error("The backend is not connected.");
-  if (!response.ok) {
-    const error = new Error(payload.error ?? "The server fumbled that request.");
-    error.status = response.status;
-    error.code = payload.code;
+  const { timeoutMs = 8_000, ...fetchOptions } = options;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(path, {
+      credentials: "same-origin",
+      ...fetchOptions,
+      signal: fetchOptions.signal ?? controller.signal,
+      headers: fetchOptions.body ? { "content-type": "application/json", ...fetchOptions.headers } : fetchOptions.headers,
+    });
+    const isJson = response.headers.get("content-type")?.includes("application/json");
+    const payload = isJson ? await response.json().catch(() => ({})) : {};
+    if (!isJson) throw new Error("The backend is not connected.");
+    if (!response.ok) {
+      const error = new Error(payload.error ?? "The server fumbled that request.");
+      error.status = response.status;
+      error.code = payload.code;
+      throw error;
+    }
+    return payload;
+  } catch (error) {
+    if (error.name === "AbortError") throw new Error("The server took too long to answer.");
     throw error;
+  } finally {
+    clearTimeout(timeout);
   }
-  return payload;
 };
 
 const post = (path, body) => request(path, { method: "POST", body: JSON.stringify(body) });
