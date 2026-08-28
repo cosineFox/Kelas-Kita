@@ -13,7 +13,7 @@ import {
 import { normaliseAdminHealth, normaliseAdminQueue } from "../lib/adminViewModel";
 
 const actions = {
-  review: [["publish", "Publish"], ["hold", "Hold"], ["reject", "Reject"], ["remove", "Remove"]],
+  review: [["publish", "Publish"], ["hold", "Hold"], ["reject", "Reject"]],
   report: [["no_action", "No action"], ["hold", "Keep held"], ["remove", "Remove"], ["dismiss", "Dismiss report"]],
   appeal: [["restore", "Restore"], ["dismiss", "Uphold decision"]],
   reply: [["publish", "Publish reply"], ["hold", "Hold reply"], ["reject", "Reject reply"]],
