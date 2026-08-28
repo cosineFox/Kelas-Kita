@@ -28,7 +28,7 @@ const request = async (path, options = {}) => {
   }
 };
 
-const post = (path, body) => request(path, { method: "POST", body: JSON.stringify(body) });
+const post = (path, body, options = {}) => request(path, { ...options, method: "POST", body: JSON.stringify(body) });
 
 export const loadPublicState = () => request("/api/state");
 export const submitReview = (body) => post("/api/reviews", body);
@@ -40,7 +40,10 @@ export const adminSession = () => request("/api/admin/session");
 export const adminLogin = (secret) => post("/api/admin/session", { secret });
 export const adminLogout = () => request("/api/admin/session", { method: "DELETE" });
 export const loadAdminQueue = () => request("/api/admin/queue");
-export const loadAdminHealth = (live = false) => request(`/api/admin/health${live ? "?live=1" : ""}`);
+export const loadAdminHealth = (live = false) => request(
+  `/api/admin/health${live ? "?live=1" : ""}`,
+  { timeoutMs: live ? 25_000 : 8_000 },
+);
 export const decideCase = (body) => post("/api/admin/decide", body);
 export const retryCase = (body) => post("/api/admin/retry", body);
-export const processAdminQueue = () => post("/api/admin/process", {});
+export const processAdminQueue = () => post("/api/admin/process", {}, { timeoutMs: 55_000 });
