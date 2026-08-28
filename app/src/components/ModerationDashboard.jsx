@@ -10,6 +10,7 @@ import {
   processAdminQueue,
   retryCase,
 } from "../lib/apiClient";
+import { normaliseAdminHealth, normaliseAdminQueue } from "../lib/adminViewModel";
 
 const actions = {
   review: [["publish", "Publish"], ["hold", "Hold"], ["reject", "Reject"], ["remove", "Remove"]],
@@ -72,9 +73,9 @@ export default function ModerationDashboard() {
     setError("");
     try {
       const [queue, nextHealth] = await Promise.all([loadAdminQueue(), loadAdminHealth(live)]);
-      const nextCases = Array.isArray(queue?.cases) ? queue.cases : [];
+      const nextCases = normaliseAdminQueue(queue);
       setCases(nextCases);
-      setHealth(nextHealth);
+      setHealth(normaliseAdminHealth(nextHealth));
       setSelectedId((current) => nextCases.some((item) => item.targetId === current) ? current : nextCases[0]?.targetId ?? null);
     } catch (nextError) {
       if (nextError.status === 401) setAuthenticated(false);

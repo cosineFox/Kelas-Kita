@@ -5,10 +5,10 @@ import ModerationDashboard from "./components/ModerationDashboard";
 import "./styles.css";
 
 class PageErrorBoundary extends Component {
-  state = { failed: false };
+  state = { error: null };
 
-  static getDerivedStateFromError() {
-    return { failed: true };
+  static getDerivedStateFromError(error) {
+    return { error: error instanceof Error ? error.message : "Unknown rendering error" };
   }
 
   componentDidCatch(error) {
@@ -16,12 +16,12 @@ class PageErrorBoundary extends Component {
   }
 
   render() {
-    if (!this.state.failed) return this.props.children;
+    if (!this.state.error) return this.props.children;
     return (
       <main className="moderation-login">
         <section className="route-error" role="alert">
           <strong>This page crashed.</strong>
-          <p>Reload it. If it breaks again, the operator route needs attention.</p>
+          <p>{this.state.error}</p>
           <button className="button primary" onClick={() => window.location.reload()}>Reload</button>
           <a href="/">Back to the public site</a>
         </section>
