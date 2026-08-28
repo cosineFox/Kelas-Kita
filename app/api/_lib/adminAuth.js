@@ -4,6 +4,7 @@ import { HttpError } from "./http.js";
 
 const cookieName = "kk_admin_session";
 const sessionSeconds = 8 * 60 * 60;
+const minimumAdminSecretLength = 8;
 
 const digest = (value) => createHash("sha256").update(value).digest();
 const sameSecret = (supplied, expected) => timingSafeEqual(digest(supplied), digest(expected));
@@ -15,7 +16,7 @@ const cookies = (request) => Object.fromEntries(
 
 export const verifyAdminSecret = (secret) => {
   const expected = requireEnv("ADMIN_SECRET");
-  if (expected.length < 20 || !sameSecret(secret ?? "", expected)) {
+  if (expected.length < minimumAdminSecretLength || !sameSecret(secret ?? "", expected)) {
     throw new HttpError(401, "invalid_admin_secret", "Enter a valid operator secret.");
   }
 };

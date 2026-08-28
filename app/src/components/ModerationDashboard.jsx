@@ -51,9 +51,9 @@ function Login({ onAuthenticated }) {
         <span className="eyebrow">Operator access</span>
         <h1>Moderation</h1>
         <p>Reports, appeals and review decisions.</p>
-        <label>Operator key<input type="password" autoComplete="current-password" value={secret} onChange={(event) => setSecret(event.target.value)} /></label>
+        <label>Operator key<input type="password" autoComplete="current-password" minLength={8} value={secret} onChange={(event) => setSecret(event.target.value)} /></label>
         {error && <p className="publish-error"><AlertTriangle /> {error}</p>}
-        <button className="button primary" disabled={submitting || secret.length < 20}>{submitting ? "Checking…" : "Sign in"}</button>
+        <button className="button primary" disabled={submitting || secret.length < 8}>{submitting ? "Checking…" : "Sign in"}</button>
         <a href="/"><ArrowLeft /> Public site</a>
       </form>
     </main>

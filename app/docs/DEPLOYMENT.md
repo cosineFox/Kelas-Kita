@@ -38,11 +38,12 @@ Generate independent random values. Do not reuse one value across fields.
 ```bash
 openssl rand -hex 32       # ABUSE_HASH_SECRET
 openssl rand -base64 32    # CONTACT_ENCRYPTION_KEY
-openssl rand -hex 32       # ADMIN_SECRET
 openssl rand -hex 32       # ADMIN_SESSION_SECRET
 openssl rand -hex 32       # CRON_SECRET
 openssl rand -hex 32       # EDGE_PROXY_SECRET
 ```
+
+Choose `ADMIN_SECRET` yourself. It is the only secret you type into the site, it must be at least eight characters, and it should be saved in your password manager. Keep the generated `ADMIN_SESSION_SECRET` long; the application uses it internally and you never type it.
 
 Add every server-only runtime field in [`.env.example`](../.env.example) to Production and Preview in Vercel, except the infrastructure-only Cloudflare fields. Add `VITE_TURNSTILE_SITE_KEY` only after step 4. `PUBLIC_ORIGIN` must be the final `https://subdomain.example.com` origin, with no trailing slash. `TURNSTILE_HOSTNAMES` is a comma-separated hostname list without schemes.
 
