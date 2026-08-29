@@ -232,17 +232,22 @@ function CaseForm({ mode, context, courses, lecturers, reviews, onNavigate, onRe
 export default function TrustCentre({ context, courses, lecturers, reviews, onNavigate, onReport, onAppeal, onReply, onClose }) {
   const titleRef = useRef(null);
   const sheetRef = useRef(null);
+  const [morphReady, setMorphReady] = useState(() => !context.origin);
 
   useLayoutEffect(() => {
     const sheet = sheetRef.current;
     const origin = context.origin;
-    if (!sheet || !origin) return;
+    if (!sheet || !origin) {
+      setMorphReady(true);
+      return;
+    }
 
     const rect = sheet.getBoundingClientRect();
     sheet.style.setProperty("--morph-x", `${origin.x - rect.left}px`);
     sheet.style.setProperty("--morph-y", `${origin.y - rect.top}px`);
     sheet.style.setProperty("--morph-scale-x", Math.max(origin.width / rect.width, 0.04));
     sheet.style.setProperty("--morph-scale-y", Math.max(origin.height / rect.height, 0.04));
+    setMorphReady(true);
   }, [context.origin]);
 
   useEffect(() => {
@@ -260,7 +265,7 @@ export default function TrustCentre({ context, courses, lecturers, reviews, onNa
   return (
     <div className="trust-layer" role="dialog" aria-modal="true" aria-labelledby="trust-title">
       <button className="trust-scrim" aria-label="Close trust centre" onClick={onClose} />
-      <section ref={sheetRef} className={`trust-sheet${context.origin ? ` from-nav morph-${context.origin.tone}` : ""}`}>
+      <section ref={sheetRef} className={`trust-sheet${context.origin ? morphReady ? ` from-nav morph-${context.origin.tone}` : " morph-pending" : ""}`}>
         <header className="trust-header">
           <div><span ref={titleRef} id="trust-title" tabIndex="-1">KelasKita Bot Basement</span><small>Qwen + fixed rules</small></div>
           <button className="icon-button" onClick={onClose} aria-label="Close"><X /></button>
