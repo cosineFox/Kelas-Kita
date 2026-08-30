@@ -40,6 +40,7 @@ export const adminSession = () => request("/api/admin/session");
 export const adminLogin = (secret) => post("/api/admin/session", { secret });
 export const adminLogout = () => request("/api/admin/session", { method: "DELETE" });
 export const loadAdminQueue = () => request("/api/admin/queue");
+export const loadAdminHistory = () => request("/api/admin/history");
 export const loadAdminHealth = (live = false) => request(
   `/api/admin/health${live ? "?live=1" : ""}`,
   { timeoutMs: live ? 25_000 : 8_000 },

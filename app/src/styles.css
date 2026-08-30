@@ -448,9 +448,16 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
 .moderation-error { margin: 0; padding: 10px 28px; display: flex; align-items: center; gap: 8px; background: #fff1ef; color: #a13525; font-size: 11px; }
 .moderation-workspace { min-height: calc(100vh - 118px); display: grid; grid-template-columns: 330px minmax(0, 1fr); }
 .case-list { border-right: 1px solid var(--line); background: #fff; }
-.case-list > header { min-height: 65px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.case-list > header { min-height: 65px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); }
+.case-list > header > div { min-width: 0; }
 .case-list h1 { margin: 0; font: 700 24px var(--display); }
 .case-list header span { color: var(--muted); font-size: 10px; }
+.queue-tabs { display: flex; gap: 4px; }
+.queue-tabs button { min-height: 28px; padding: 0 7px; border: 1px solid var(--soft-line); border-radius: 4px; background: #fff; color: var(--muted); font-size: 9px; font-weight: 800; }
+.queue-tabs button.selected { border-color: var(--ink); background: var(--blue); color: var(--ink); }
+.queue-tabs button b { margin-left: 3px; font-size: 8px; }
+.queue-note { margin: 0; padding: 10px 20px; display: flex; align-items: flex-start; gap: 6px; border-bottom: 1px solid var(--soft-line); background: #fafdff; color: var(--muted); font-size: 9px; line-height: 1.45; }
+.queue-note svg { flex: 0 0 auto; width: 13px; height: 13px; color: #175ac8; }
 .case-list > button { width: 100%; min-height: 108px; padding: 15px 20px; display: grid; justify-items: start; gap: 5px; border: 0; border-bottom: 1px solid var(--soft-line); background: #fff; text-align: left; }
 .case-list > button.selected { background: var(--blue); box-shadow: inset 3px 0 var(--coral); }
 .case-list > button.urgent { background: #fff9f1; }
@@ -492,6 +499,11 @@ footer nav button { padding: 0; border: 0; background: transparent; font-size: i
 .human-decision button.danger { border-color: #a13525; color: #a13525; }
 .human-decision button:disabled { cursor: not-allowed; opacity: .35; }
 .human-decision .retry-button { margin-top: 12px; display: flex; align-items: center; gap: 7px; border-color: #175ac8; color: #175ac8; }
+.case-history-note { margin-top: 30px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 10px; border: 1px solid var(--soft-line); background: #fafdff; color: var(--muted); }
+.case-history-note > svg { flex: 0 0 auto; width: 18px; height: 18px; color: var(--success); }
+.case-history-note > div { display: grid; gap: 4px; }
+.case-history-note strong { color: var(--ink); font-size: 11px; }
+.case-history-note span { font-size: 10px; line-height: 1.5; }
 
 /* Public skin: photocopied campus zine, not a consultancy dashboard. */
 .site-shell { background: rgba(243,239,223,.94); border-top: 3px solid var(--ink); }

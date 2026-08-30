@@ -5,7 +5,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { citext } from "@electric-sql/pglite/contrib/citext";
 import { pgcrypto } from "@electric-sql/pglite/contrib/pgcrypto";
 import { setSqlForTests } from "./db.js";
-import { applyHumanDecision, readModerationQueue } from "./adminRepository.js";
+import { applyHumanDecision, readModerationHistory, readModerationQueue } from "./adminRepository.js";
 import {
   claimTargetJob,
   createAppeal,
@@ -72,6 +72,8 @@ test("commits catalogue, pending review, queue and publication on the server", a
   assert.equal(pending.lecturers.length, 0);
   assert.equal(pending.assignments.length, 0);
   assert.equal(pending.reviews.length, 0);
+  assert.equal((await readModerationQueue()).some((item) => item.targetId === created.review.id), true);
+  assert.equal((await readModerationHistory()).some((item) => item.targetId === created.review.id), false);
   const moderationTarget = await loadModerationTarget("review", created.review.id);
   assert.match(moderationTarget.text, /Course: COMP2013: Algorithms/);
   assert.match(moderationTarget.text, /Lecturer: Dr Aisha Rahman/);
@@ -95,6 +97,7 @@ test("commits catalogue, pending review, queue and publication on the server", a
   assert.equal(published.assignments.length, 1);
   assert.equal(published.reviews.length, 1);
   assert.equal(published.reviews[0].status, "published");
+  assert.equal((await readModerationQueue()).some((item) => item.targetId === created.review.id), false);
 
   const report = await createReport(request, {
     reviewId: created.review.id,
@@ -128,6 +131,8 @@ test("commits catalogue, pending review, queue and publication on the server", a
     reason: "The staging report was intentionally synthetic and contains no real personal data.",
   });
   assert.equal((await readPublicState()).reviews.length, 1);
+  assert.equal((await readModerationQueue()).some((item) => item.targetId === report.id), false);
+  assert.equal((await readModerationHistory()).some((item) => item.targetId === report.id), true);
 
   await applyHumanDecision({
     kind: "review",
@@ -135,6 +140,7 @@ test("commits catalogue, pending review, queue and publication on the server", a
     action: "remove",
     reason: "Exercise the private receipt appeal and restoration path in the integration test.",
   });
+  assert.equal((await readModerationHistory()).some((item) => item.targetId === created.review.id), true);
   const appeal = await createAppeal(request, {
     receipt: created.receipt,
     details: "This synthetic integration case asks a separate human reviewer to restore the test review after checking the recorded decision.",

@@ -6,6 +6,7 @@ import {
   adminSession,
   decideCase,
   loadAdminHealth,
+  loadAdminHistory,
   loadAdminQueue,
   processAdminQueue,
   retryCase,
@@ -13,11 +14,13 @@ import {
 import { normaliseAdminHealth, normaliseAdminQueue } from "../lib/adminViewModel";
 
 const actions = {
-  review: [["publish", "Publish"], ["hold", "Hold"], ["reject", "Reject"]],
+  review: [["publish", "Publish"], ["hold", "Keep private"], ["reject", "Reject"]],
   report: [["no_action", "No action"], ["hold", "Keep held"], ["remove", "Remove"], ["dismiss", "Dismiss report"]],
   appeal: [["restore", "Restore"], ["dismiss", "Uphold decision"]],
-  reply: [["publish", "Publish reply"], ["hold", "Hold reply"], ["reject", "Reject reply"]],
+  reply: [["publish", "Publish reply"], ["hold", "Keep reply private"], ["reject", "Reject reply"]],
 };
+
+const terminalStates = new Set(["published", "rejected", "removed", "resolved", "dismissed", "restored"]);
 
 const age = (date) => {
   const minutes = Math.max(0, Math.floor((Date.now() - new Date(date)) / 60_000));
@@ -64,6 +67,7 @@ export default function ModerationDashboard() {
   const [authenticated, setAuthenticated] = useState(null);
   const [cases, setCases] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
+  const [queueView, setQueueView] = useState("active");
   const [health, setHealth] = useState(null);
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
@@ -72,11 +76,10 @@ export default function ModerationDashboard() {
   const load = useCallback(async (live = false) => {
     setError("");
     try {
-      const [queue, nextHealth] = await Promise.all([loadAdminQueue(), loadAdminHealth(live)]);
-      const nextCases = normaliseAdminQueue(queue);
+      const [queue, history, nextHealth] = await Promise.all([loadAdminQueue(), loadAdminHistory(), loadAdminHealth(live)]);
+      const nextCases = [...normaliseAdminQueue(queue), ...normaliseAdminQueue(history)];
       setCases(nextCases);
       setHealth(normaliseAdminHealth(nextHealth));
-      setSelectedId((current) => nextCases.some((item) => item.targetId === current) ? current : nextCases[0]?.targetId ?? null);
     } catch (nextError) {
       if (nextError.status === 401) setAuthenticated(false);
       else setError(nextError.message);
@@ -89,7 +92,15 @@ export default function ModerationDashboard() {
       .catch(() => setAuthenticated(false));
   }, [load]);
 
-  const selected = useMemo(() => cases.find((item) => item.targetId === selectedId), [cases, selectedId]);
+  const activeCases = useMemo(() => cases.filter((item) => !terminalStates.has(item.state)), [cases]);
+  const historyCases = useMemo(() => cases.filter((item) => terminalStates.has(item.state)), [cases]);
+  const visibleCases = queueView === "history" ? historyCases : activeCases;
+  const selected = useMemo(() => visibleCases.find((item) => item.targetId === selectedId), [selectedId, visibleCases]);
+
+  useEffect(() => {
+    setSelectedId((current) => visibleCases.some((item) => item.targetId === current) ? current : visibleCases[0]?.targetId ?? null);
+    setReason("");
+  }, [queueView, visibleCases]);
 
   const decide = async (action) => {
     if (!selected || reason.trim().length < 10) return;
@@ -158,12 +169,19 @@ export default function ModerationDashboard() {
       {error && <p className="moderation-error"><AlertTriangle /> {error}</p>}
       <div className="moderation-workspace">
         <aside className="case-list">
-          <header><h1>Queue</h1><span>{cases.length} open</span></header>
-          {!cases.length && <div className="queue-empty"><Check /><strong>No open cases</strong></div>}
-          {cases.map((item) => (
+          <header>
+            <div><h1>{queueView === "history" ? "History" : "Queue"}</h1><span>{visibleCases.length} {queueView === "history" ? "archived" : "active"}</span></div>
+            <nav className="queue-tabs" aria-label="Moderation queue view">
+              <button className={queueView === "active" ? "selected" : ""} aria-pressed={queueView === "active"} onClick={() => setQueueView("active")}>Active <b>{activeCases.length}</b></button>
+              <button className={queueView === "history" ? "selected" : ""} aria-pressed={queueView === "history"} onClick={() => setQueueView("history")}>History <b>{historyCases.length}</b></button>
+            </nav>
+          </header>
+          {queueView === "active" && <p className="queue-note"><Clock3 /> Active cases still need a decision. Held reviews stay private and do not affect public ratings.</p>}
+          {!visibleCases.length && <div className="queue-empty"><Check /><strong>{queueView === "history" ? "No decision history" : "No active cases"}</strong><small>{queueView === "history" ? "Published, rejected and removed cases will collect here." : "New submissions will appear here after they arrive."}</small></div>}
+          {visibleCases.map((item) => (
             <button key={`${item.kind}-${item.targetId}`} className={`${selectedId === item.targetId ? "selected" : ""} ${item.urgent ? "urgent" : ""}`} onClick={() => { setSelectedId(item.targetId); setReason(""); }}>
               <span>{item.kind}</span><strong>{item.courseCode} · {item.lecturerName}</strong>
-              <small><Clock3 /> Open for {age(item.createdAt)} · {item.state}</small>
+              <small>{queueView === "history" ? <><Check /> Archived · {item.state}</> : <><Clock3 /> Open for {age(item.createdAt)} · {item.state}</>}</small>
               {item.urgent && <em><ShieldAlert /> Urgent removal</em>}
             </button>
           ))}
@@ -185,12 +203,12 @@ export default function ModerationDashboard() {
             </dl>
             {selected.lastError && <div className="job-error"><AlertTriangle /> Retry queue: {selected.lastError}</div>}
             {selected.agentFindings?.length > 0 && <section className="agent-findings"><h3>AI findings</h3>{selected.agentFindings.map((finding) => <div key={finding.agent}><strong>{finding.agent}</strong><span>{finding.severity}</span><p>{finding.rationale}</p></div>)}</section>}
-            <section className="human-decision">
+            {queueView === "history" ? <section className="case-history-note"><Check /><div><strong>Decision recorded</strong><span>This case is archived. It is no longer waiting for an operator action.</span></div></section> : <section className="human-decision">
               <h3>Human verdict</h3>
               <label>Private receipts<input value={reason} maxLength={500} placeholder="Record the policy basis and evidence considered…" onChange={(event) => setReason(event.target.value)} /></label>
               <div>{(actions[selected.kind] ?? []).map(([action, label]) => <button key={action} className={action === "remove" || action === "reject" ? "danger" : ""} disabled={busy || reason.trim().length < 10} onClick={() => decide(action)}>{label}</button>)}</div>
               {["retry", "dead"].includes(selected.jobState) && <button className="retry-button" disabled={busy} onClick={retry}><RefreshCw /> Retry job</button>}
-            </section>
+            </section>}
           </>}
         </article>
       </div>

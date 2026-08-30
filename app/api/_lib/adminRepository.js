@@ -27,7 +27,9 @@ export const readModerationQueue = async () => {
         select action, reason_codes, agent_findings from moderation_decisions
         where review_id = r.id order by created_at desc limit 1
       ) d on true
-      where r.moderation in ('pending', 'held', 'rejected')
+      -- Rejected reviews are terminal history, not active work. Held reviews
+      -- remain here because an operator still needs to publish or reject them.
+      where r.moderation in ('pending', 'held')
     `,
     tx`
       select 'report' as kind, rr.id::text as "targetId", r.id::text as "reviewId",
@@ -92,6 +94,90 @@ export const readModerationQueue = async () => {
       contact: item.contact ? decryptPrivateText(item.contact) : null,
     }))
     .sort((left, right) => Number(right.urgent) - Number(left.urgent) || new Date(left.createdAt) - new Date(right.createdAt));
+};
+
+// Terminal cases are kept for operator audit, but never mixed into active work.
+// This deliberately excludes published reviews so the history view remains a
+// useful record of rejects, removals and resolved reports/appeals.
+export const readModerationHistory = async () => {
+  const sql = getSql();
+  const [reviews, reports, appeals, replies] = await sql.transaction((tx) => [
+    tx`
+      select 'review' as kind, r.id::text as "targetId", r.id::text as "reviewId",
+        c.code::text as "courseCode", c.name::text as "courseName", l.name::text as "lecturerName",
+        r.body, null::text as details, null::bytea as contact, r.moderation::text as state,
+        false as urgent, coalesce(r.removed_at, r.created_at) as "createdAt",
+        j.state::text as "jobState", j.attempts, j.last_error as "lastError", d.action::text as "lastAction",
+        d.reason_codes as "reasonCodes", d.agent_findings as "agentFindings"
+      from reviews r
+      join courses c on c.id = r.course_id
+      join lecturers l on l.id = r.lecturer_id
+      left join moderation_jobs j on j.kind = 'review' and j.target_id = r.id
+      left join lateral (
+        select action, reason_codes, agent_findings from moderation_decisions
+        where review_id = r.id order by created_at desc limit 1
+      ) d on true
+      where r.moderation in ('rejected', 'removed')
+    `,
+    tx`
+      select 'report' as kind, rr.id::text as "targetId", r.id::text as "reviewId",
+        c.code::text as "courseCode", c.name::text as "courseName", l.name::text as "lecturerName",
+        r.body, concat(rr.reason, E'\n', rr.details) as details, null::bytea as contact,
+        rr.state::text as state, rr.urgent, coalesce(rr.resolved_at, rr.created_at) as "createdAt",
+        j.state::text as "jobState", j.attempts, j.last_error as "lastError",
+        d.action::text as "lastAction", d.reason_codes as "reasonCodes", d.agent_findings as "agentFindings"
+      from review_reports rr
+      join reviews r on r.id = rr.review_id
+      join courses c on c.id = r.course_id
+      join lecturers l on l.id = r.lecturer_id
+      left join moderation_jobs j on j.kind = 'report' and j.target_id = rr.id
+      left join lateral (
+        select action, reason_codes, agent_findings from moderation_decisions
+        where report_id = rr.id order by created_at desc limit 1
+      ) d on true
+      where rr.state in ('resolved', 'closed')
+    `,
+    tx`
+      select 'appeal' as kind, a.id::text as "targetId", r.id::text as "reviewId",
+        c.code::text as "courseCode", c.name::text as "courseName", l.name::text as "lecturerName",
+        r.body, a.details, null::bytea as contact, a.state::text as state,
+        false as urgent, coalesce(a.resolved_at, a.created_at) as "createdAt", j.state::text as "jobState",
+        j.attempts, j.last_error as "lastError", d.action::text as "lastAction",
+        d.reason_codes as "reasonCodes", d.agent_findings as "agentFindings"
+      from review_appeals a
+      join reviews r on r.id = a.review_id
+      join courses c on c.id = r.course_id
+      join lecturers l on l.id = r.lecturer_id
+      left join moderation_jobs j on j.kind = 'appeal' and j.target_id = a.id
+      left join lateral (
+        select action, reason_codes, agent_findings from moderation_decisions
+        where appeal_id = a.id order by created_at desc limit 1
+      ) d on true
+      where a.state in ('resolved', 'closed')
+    `,
+    tx`
+      select 'reply' as kind, lr.id::text as "targetId", r.id::text as "reviewId",
+        c.code::text as "courseCode", c.name::text as "courseName", l.name::text as "lecturerName",
+        lr.body, 'Lecturer right of reply'::text as details, null::bytea as contact,
+        lr.moderation::text as state, false as urgent, lr.created_at as "createdAt",
+        j.state::text as "jobState", j.attempts, j.last_error as "lastError", d.action::text as "lastAction",
+        d.reason_codes as "reasonCodes", d.agent_findings as "agentFindings"
+      from lecturer_replies lr
+      join reviews r on r.id = lr.review_id
+      join courses c on c.id = r.course_id
+      join lecturers l on l.id = lr.lecturer_id
+      left join moderation_jobs j on j.kind = 'reply' and j.target_id = lr.id
+      left join lateral (
+        select action, reason_codes, agent_findings from moderation_decisions
+        where reply_id = lr.id order by created_at desc limit 1
+      ) d on true
+      where lr.moderation = 'rejected'
+    `,
+  ], { isolationLevel: "RepeatableRead", readOnly: true });
+
+  return [...reviews, ...reports, ...appeals, ...replies]
+    .map((item) => normaliseItem({ ...item, contact: item.contact ? decryptPrivateText(item.contact) : null }))
+    .sort((left, right) => new Date(right.createdAt) - new Date(left.createdAt));
 };
 
 const allowedActions = {

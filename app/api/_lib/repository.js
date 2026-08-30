@@ -294,8 +294,10 @@ export const saveAutomatedDecision = async (kind, targetId, result) => {
         from target where r.id = target.review_id returning r.moderation
       ), case_update as (
         update review_reports set
-          state = case when ${value.action} = 'no_action' and not urgent then 'resolved'::case_state else state end,
-          resolved_at = case when ${value.action} = 'no_action' and not urgent then now() else resolved_at end
+          state = case when ${value.action} in ('hold', 'hide', 'escalate')
+            then state else 'resolved'::case_state end,
+          resolved_at = case when ${value.action} in ('hold', 'hide', 'escalate')
+            then resolved_at else now() end
         where id = ${targetId}
       )
       insert into moderation_decisions (
